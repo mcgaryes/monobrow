@@ -1,0 +1,9 @@
+{
+	"name":"monobrow-server",
+	"version":"0.1.0",
+	"dependencies":{
+		"underscore":"1.x.x",
+		"backbone":"1.x.x",
+		"ansi-color":"0.2.1"
+	}
+}
