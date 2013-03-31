@@ -1,6 +1,7 @@
 {
 	"name":"monobrow",
 	"version":"0.1.0",
+	"private":true,
 	"dependencies":{
 		"underscore":"1.x.x",
 		"backbone":"1.x.x",
