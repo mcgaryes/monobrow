@@ -100,11 +100,14 @@ package monobrow
 		 * and attaches the needed listeners for dispatching. 
 		 * @param $options Configuration options to be applied to the client
 		 */		
-		public function Client($options:Object)
+		public function Client($options:Object=null)
 		{
 			// set properties from defaults
-			if($options.hasOwnProperty("host")) _host = $options['host']; 
-			if($options.hasOwnProperty("port")) _port = $options['port'];
+			if($options)
+			{
+				if($options.hasOwnProperty("host")) _host = $options['host']; 
+				if($options.hasOwnProperty("port")) _port = $options['port'];
+			}
 			
 			// create socket connection and attempt to connect
 			_socket=new Socket();
@@ -208,6 +211,7 @@ package monobrow
 		 */		
 		private function __handleSocketConnect($e:Event=null):void
 		{
+			trace("Monobrow Client: Client connected to " + _host + ":" + _port + ".");
 			_state=STATE_CONNECTED;
 			dispatchEvent(new StateChangeEvent(_state));
 		}
@@ -219,6 +223,7 @@ package monobrow
 		 */		
 		private function __handleSocketClose($e:Event=null):void
 		{
+			trace("Monobrow Client: Client disconnected from " + _host + ":" + _port + ".");
 			_state=STATE_DISCONNECTED;
 			dispatchEvent(new StateChangeEvent(_state));
 		}
@@ -230,6 +235,7 @@ package monobrow
 		 */		
 		private function __handleSocketError($e:IOErrorEvent=null):void
 		{
+			trace("Monobrow Client: The client encountered an error.");
 			_state=STATE_ERROR;
 			dispatchEvent(new StateChangeEvent(_state));
 		}
@@ -241,6 +247,7 @@ package monobrow
 		 */		
 		private function __handleSecurityError($e:Event=null):void
 		{
+			trace("Monobrow Client: The client encountered a security error.");
 			_state=STATE_ERROR;
 			dispatchEvent(new StateChangeEvent(_state));
 		}
