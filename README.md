@@ -35,3 +35,10 @@ The focus of this project was to make it very simple to create and connect to a 
 ### API Documentation
 
 For full [API documentation](https://github.com/mcgaryes/monobrow/wiki), including the Monobrow server as well as the various clients please see the wiki of the repository.
+
+### Clients In The Works
+
+* Processing
+* Objective-C
+* Visual C++
+* Browser
