@@ -68,7 +68,7 @@ Object.defineProperties(Logger.prototype, {
 	 */
 	warn: {
 		value: function(warning) {
-			console.log(color(this._timestamp, "green") + " - " + color(warning, "yellow"));
+			console.log(color(this._timestamp, "green") + " - " + color("Warning: ", "yellow+bold") + color(warning, "yellow"));
 			if (this._out) {
 				fs.appendFile(this._out, "Warning: " + this._timestamp + " - " + warning + "\n");
 			}
@@ -83,7 +83,7 @@ Object.defineProperties(Logger.prototype, {
 	 */
 	error: {
 		value: function(error) {
-			console.log(color(this._timestamp, "green") + " - " + color(error, "red"));
+			console.log(color(this._timestamp, "green") + " - " + color("Error: ", "red+bold") + color(error, "red"));
 			if (this._error) {
 				fs.appendFile(this._error, this._timestamp + " - " + error + "\n");
 			}
