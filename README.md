@@ -40,5 +40,5 @@ For full [API documentation](https://github.com/mcgaryes/monobrow/wiki), includi
 
 * Processing
 * Objective-C
-* Visual C++
+* C++
 * JavaScript (Browser)
