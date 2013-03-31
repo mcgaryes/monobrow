@@ -54,6 +54,7 @@ Manager.prototype = Object.create(Backbone.Events, {
 			connection.on("close", function(hadError) {
 				delegate.removeConnection(connection);
 			});
+
 		}
 	},
 
@@ -80,6 +81,7 @@ Manager.prototype = Object.create(Backbone.Events, {
 		value: function(connection) {
 			this._connections.push(connection);
 			this.logger.log("Connection added. " + this._connections.length + " total connection(s).");
+			this.trigger(Manager.CONNECTION_MADE,connection);
 		}
 	},
 
@@ -93,6 +95,7 @@ Manager.prototype = Object.create(Backbone.Events, {
 			this._connections = _.filter(this._connections, function(c, index) {
 				if (c.remotePort === connection.remotePort) {
 					this.logger.log("Connection removed. " + (this._connections.length - 1) + " total connection(s) remaining.");
+					this.trigger(Manager.CONNECTION_LOST,connection);
 				}
 				return c.remotePort !== connection.remotePort;
 			}, this);
@@ -113,3 +116,21 @@ Manager.prototype = Object.create(Backbone.Events, {
 		}
 	}
 });
+
+// ============================================================
+// === Manager Events =========================================
+// ============================================================
+
+/**
+ * @property CONNECTION_MADE
+ * @type String
+ * @static
+ */
+Manager.CONNECTION_MADE = "connectionMadeEvent";
+
+/**
+ * @property CONNECTION_LOST
+ * @type String
+ * @static
+ */
+Manager.CONNECTION_LOST = "connectionLostEvent";

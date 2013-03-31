@@ -120,7 +120,7 @@
          */
         warn: {
             value: function(warning) {
-                console.log(color(this._timestamp, "green") + " - " + color(warning, "yellow"));
+                console.log(color(this._timestamp, "green") + " - " + color("Warning: ", "yellow+bold") + color(warning, "yellow"));
                 if (this._out) {
                     fs.appendFile(this._out, "Warning: " + this._timestamp + " - " + warning + "\n");
                 }
@@ -135,7 +135,7 @@
          */
         error: {
             value: function(error) {
-                console.log(color(this._timestamp, "green") + " - " + color(error, "red"));
+                console.log(color(this._timestamp, "green") + " - " + color("Error: ", "red+bold") + color(error, "red"));
                 if (this._error) {
                     fs.appendFile(this._error, this._timestamp + " - " + error + "\n");
                 }
@@ -199,6 +199,7 @@
                 connection.on("close", function(hadError) {
                     delegate.removeConnection(connection);
                 });
+
             }
         },
 
@@ -225,6 +226,7 @@
             value: function(connection) {
                 this._connections.push(connection);
                 this.logger.log("Connection added. " + this._connections.length + " total connection(s).");
+                this.trigger(Manager.CONNECTION_MADE, connection);
             }
         },
 
@@ -238,6 +240,7 @@
                 this._connections = _.filter(this._connections, function(c, index) {
                     if (c.remotePort === connection.remotePort) {
                         this.logger.log("Connection removed. " + (this._connections.length - 1) + " total connection(s) remaining.");
+                        this.trigger(Manager.CONNECTION_LOST, connection);
                     }
                     return c.remotePort !== connection.remotePort;
                 }, this);
@@ -260,6 +263,24 @@
     });
 
     // ============================================================
+    // === Manager Events =========================================
+    // ============================================================
+
+    /**
+     * @property CONNECTION_MADE
+     * @type String
+     * @static
+     */
+    Manager.CONNECTION_MADE = "connectionMadeEvent";
+
+    /**
+     * @property CONNECTION_LOST
+     * @type String
+     * @static
+     */
+    Manager.CONNECTION_LOST = "connectionLostEvent";
+
+    // ============================================================
     // === Server =================================================
     // ============================================================
 
@@ -269,18 +290,18 @@
      */
     var Server = Monobrow.Server = function(options) {
 
-        // create logger
-        var logger = this._logger = new Logger(options);
+        // initialize the server
+        this.__initialize(options);
 
-        // create manager
-        this._manager = new Manager({
-            logger: logger
-        });
-
+        // extend the instance with the passed options
         _.extend(this, options);
     };
 
     Server.prototype = Object.create(Backbone.Events, {
+
+        // ============================================================
+        // === Public Properties ======================================
+        // ============================================================
 
         /**
          * The host the socket server will start up on
@@ -304,6 +325,10 @@
             writable: true
         },
 
+        // ============================================================
+        // === Public Methods =========================================
+        // ============================================================
+
         /**
          * Starts the TCP server on the specified port and host
          * @method start
@@ -325,7 +350,59 @@
                     delegate._logger.log("Monobrow server is running on " + delegate.host + ":" + delegate.port + ".");
                 });
             }
+        },
+
+        // ============================================================
+        // === Private Methods ========================================
+        // ============================================================
+
+        /**
+         * Initialized the server instance
+         * @method __initialize
+         * @param {Object} options The options passed through the constructor
+         */
+        __initialize: {
+            value: function(options) {
+
+                // delegate reference for scoping
+                var delegate = this;
+
+                // create logger
+                var logger = this._logger = new Logger(options);
+
+                // create manager
+                var manager = this._manager = new Manager({
+                    logger: logger
+                });
+
+                // add event listeners that will in turn dispatch events of their own
+                manager.on(Manager.CONNECTION_MADE, function(connection) {
+                    delegate.trigger(Server.CLIENT_DID_CONNECT, connection);
+                });
+
+                manager.on(Manager.CONNECTION_LOST, function(connection) {
+                    delegate.trigger(Server.CLIENT_DID_DISCONNECT, connection);
+                });
+            }
         }
     });
+
+    // ============================================================
+    // === Server Events ==========================================
+    // ============================================================
+
+    /**
+     * @property CLIENT_DID_CONNECTED
+     * @type String
+     * @static
+     */
+    Server.CLIENT_DID_CONNECT = "clientDidConnect";
+
+    /**
+     * @property CLIENT_DID_DISCONNECT
+     * @type String
+     * @static
+     */
+    Server.CLIENT_DID_DISCONNECT = "clientDidDisconnect";
 
 }).call(this);

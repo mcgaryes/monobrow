@@ -9,4 +9,12 @@ var server = new Server({
 	error:"error.out"
 });
 
+server.on(Server.CLIENT_DID_CONNECT,function(connection){
+	// ...
+});
+
+server.on(Server.CLIENT_DID_DISCONNECT,function(connection){
+	// ...
+});
+
 server.start();
