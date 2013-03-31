@@ -1,6 +1,6 @@
 "use strict";
 
-var Server = require("../../monobrow.server.js").Server;
+var Server = require("../../../monobrow.js").Server;
 
 var server = new Server({
 	host:"127.0.0.1",

@@ -1,4 +1,4 @@
-var Client = require("../../clients/node/monobrow.client");
+var Client = require("../../../clients/node/monobrow.client");
 
 var listener = new Client({
 	id:"complex-emitter",

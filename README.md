@@ -9,7 +9,7 @@ The focus of this project was to make it very simple to create and connect to a 
 * Create a server to connect to...
 
 	<pre>
-	var Server = require("monobrow.server").Server;
+	var Server = require("monobrow").Server;
 	var server = new Server();
 	server.start();
 	</pre>

@@ -36,7 +36,7 @@ module.exports = function(grunt) {
             options: {
                 jshintrc: '../.jshintrc'
             },
-            server:['grunt.js', '../monobrow.server.js'],
+            server:['grunt.js', '../monobrow.js'],
             client:['grunt.js', '../clients/node/monobrow.client.js']
         },
         concat: {
@@ -51,7 +51,7 @@ module.exports = function(grunt) {
                     '../source/monobrow.manager.js',
                     '../source/monobrow.server.js',
                     '../source/monobrow.outro.js'],
-                dest: '../monobrow.server.js'
+                dest: '../monobrow.js'
             },
             client: {
                 src: [
@@ -68,7 +68,7 @@ module.exports = function(grunt) {
                 'indent_size': 4,
                 "max_preserve_newlines": 1,
             },
-            files: ['../monobrow.server.js', '../clients/node/monobrow.client.js']
+            files: ['../monobrow.js', '../clients/node/monobrow.client.js']
         }
     });
 
