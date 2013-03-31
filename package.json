@@ -1,5 +1,5 @@
 {
-	"name":"monobrow-server",
+	"name":"monobrow",
 	"version":"0.1.0",
 	"dependencies":{
 		"underscore":"1.x.x",
