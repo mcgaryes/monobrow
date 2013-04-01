@@ -32,6 +32,8 @@ The focus of this project was to make it very simple to create and connect to a 
 		client.connect();
 		</pre>
 
+You can see a full list of supported clients and their respective libraries in the [clients](https://github.com/mcgaryes/monobrow/tree/master/clients) directory of this repository.
+
 ### API Documentation
 
 For full [API documentation](https://github.com/mcgaryes/monobrow/wiki), including the Monobrow server as well as the various clients please see the wiki of the repository.
