@@ -1,0 +1,429 @@
+{
+    "project": {
+        "name": "monobrow-client",
+        "description": "Monobrow node socket client.",
+        "version": "0.1.1",
+        "url": "https://github.com/mcgaryes/monobrow"
+    },
+    "files": {
+        "../source/monobrow.client.js": {
+            "name": "../source/monobrow.client.js",
+            "modules": {},
+            "classes": {
+                "Client": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "../source/monobrow.logger.js": {
+            "name": "../source/monobrow.logger.js",
+            "modules": {},
+            "classes": {
+                "Logger": 1
+            },
+            "fors": {
+                "Logger": 1
+            },
+            "namespaces": {}
+        },
+        "../source/monobrow.manager.js": {
+            "name": "../source/monobrow.manager.js",
+            "modules": {},
+            "classes": {
+                "Manager": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        }
+    },
+    "modules": {},
+    "classes": {
+        "Client": {
+            "name": "Client",
+            "shortname": "Client",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "../source/monobrow.client.js",
+            "line": 5,
+            "description": "Client for connecting to a Monobrow server.",
+            "is_constructor": 1
+        },
+        "Logger": {
+            "name": "Logger",
+            "shortname": "Logger",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "../source/monobrow.logger.js",
+            "line": 5,
+            "description": "Helper prototype for logging manager and server messages,\nwarnings, and errors. Also writes to out and error files if\nthey are specified in the server config",
+            "is_constructor": 1,
+            "access": "private",
+            "tagname": ""
+        },
+        "Manager": {
+            "name": "Manager",
+            "shortname": "Manager",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "../source/monobrow.manager.js",
+            "line": 5,
+            "description": "Manages connections for the socket server.",
+            "is_constructor": 1,
+            "access": "private",
+            "tagname": ""
+        }
+    },
+    "classitems": [
+        {
+            "file": "../source/monobrow.client.js",
+            "line": 29,
+            "description": "Public getter for the current state of the client.",
+            "itemtype": "property",
+            "name": "state",
+            "type": "String",
+            "class": "Client"
+        },
+        {
+            "file": "../source/monobrow.client.js",
+            "line": 40,
+            "description": "Public getter for the previous state of the client.",
+            "itemtype": "property",
+            "name": "previousState",
+            "type": "String",
+            "class": "Client"
+        },
+        {
+            "file": "../source/monobrow.client.js",
+            "line": 51,
+            "description": "The host the client will connect to",
+            "itemtype": "property",
+            "name": "host",
+            "type": "String",
+            "default": "localhost",
+            "class": "Client"
+        },
+        {
+            "file": "../source/monobrow.client.js",
+            "line": 62,
+            "description": "The port the socket will connect to",
+            "itemtype": "property",
+            "name": "port",
+            "type": "Integer",
+            "default": "8889",
+            "class": "Client"
+        },
+        {
+            "file": "../source/monobrow.client.js",
+            "line": 77,
+            "description": "Connects the client to the remote socket server.",
+            "itemtype": "method",
+            "name": "connect",
+            "class": "Client"
+        },
+        {
+            "file": "../source/monobrow.client.js",
+            "line": 91,
+            "description": "Diconnects the client from the remote socket server.",
+            "itemtype": "method",
+            "name": "disconnect",
+            "class": "Client"
+        },
+        {
+            "file": "../source/monobrow.client.js",
+            "line": 103,
+            "description": "Emits a message to the server the client is connected to.",
+            "itemtype": "method",
+            "name": "emit",
+            "class": "Client"
+        },
+        {
+            "file": "../source/monobrow.client.js",
+            "line": 125,
+            "itemtype": "method",
+            "name": "__initialize",
+            "access": "private",
+            "tagname": "",
+            "class": "Client"
+        },
+        {
+            "file": "../source/monobrow.client.js",
+            "line": 161,
+            "description": "This method is just used for logging purposes. If an error occurs\nthe close method is called immediately after and we'll handle\ntriggering the state change there, not here.",
+            "itemtype": "method",
+            "name": "__handleSocketError",
+            "params": [
+                {
+                    "name": "e",
+                    "description": "Socket error object",
+                    "type": "Object"
+                }
+            ],
+            "access": "private",
+            "tagname": "",
+            "class": "Client"
+        },
+        {
+            "file": "../source/monobrow.client.js",
+            "line": 179,
+            "itemtype": "method",
+            "name": "__handleSocketConnect",
+            "access": "private",
+            "tagname": "",
+            "class": "Client"
+        },
+        {
+            "file": "../source/monobrow.client.js",
+            "line": 193,
+            "itemtype": "method",
+            "name": "__handleSocketData",
+            "params": [
+                {
+                    "name": "data",
+                    "description": "The raw data sent from the server",
+                    "type": "Buffer"
+                }
+            ],
+            "access": "private",
+            "tagname": "",
+            "class": "Client"
+        },
+        {
+            "file": "../source/monobrow.client.js",
+            "line": 205,
+            "itemtype": "method",
+            "name": "__handleSocketClose",
+            "params": [
+                {
+                    "name": "error",
+                    "description": "Socket error object",
+                    "type": "Object"
+                }
+            ],
+            "access": "private",
+            "tagname": "",
+            "class": "Client"
+        },
+        {
+            "file": "../source/monobrow.client.js",
+            "line": 231,
+            "description": "State change event fired on a state change of the client.",
+            "itemtype": "property",
+            "name": "STATE_CHANGE",
+            "type": "String",
+            "static": 1,
+            "class": "Client"
+        },
+        {
+            "file": "../source/monobrow.client.js",
+            "line": 240,
+            "description": "The data event is fired when incoming data is recognized. The data\npassed is the raw buffer. Call toString on the data to get the string\nrepresentation of the data.",
+            "itemtype": "property",
+            "name": "DATA",
+            "type": "String",
+            "static": 1,
+            "class": "Client"
+        },
+        {
+            "file": "../source/monobrow.client.js",
+            "line": 254,
+            "description": "The client is connected to the remote socket server.",
+            "itemtype": "property",
+            "name": "STATE_CONNECTED",
+            "type": "String",
+            "static": 1,
+            "class": "Client"
+        },
+        {
+            "file": "../source/monobrow.client.js",
+            "line": 262,
+            "description": "The client is connected to the remote socket server.",
+            "itemtype": "property",
+            "name": "STATE_CONNECTED",
+            "type": "String",
+            "static": 1,
+            "class": "Client"
+        },
+        {
+            "file": "../source/monobrow.client.js",
+            "line": 270,
+            "description": "The client has diconnected from the remote socket server.",
+            "itemtype": "property",
+            "name": "STATE_DISCONNECTED",
+            "type": "String",
+            "static": 1,
+            "class": "Client"
+        },
+        {
+            "file": "../source/monobrow.client.js",
+            "line": 278,
+            "description": "The client has encountered an error connecting to the remote socket server.",
+            "itemtype": "property",
+            "name": "STATE_ERROR",
+            "type": "String",
+            "static": 1,
+            "class": "Client"
+        },
+        {
+            "file": "../source/monobrow.logger.js",
+            "line": 26,
+            "description": "Getter that grabs and formats the current date and creates\na timestamp for use in logging",
+            "itemtype": "property",
+            "name": "_timestamp",
+            "type": "String",
+            "access": "private",
+            "tagname": "",
+            "class": "Logger"
+        },
+        {
+            "file": "../source/monobrow.logger.js",
+            "line": 47,
+            "description": "Console log wrapper that also writes to the out file\nif it was specified in the server options",
+            "itemtype": "method",
+            "name": "log",
+            "params": [
+                {
+                    "name": "message",
+                    "description": "",
+                    "type": "String"
+                }
+            ],
+            "class": "Logger"
+        },
+        {
+            "file": "../source/monobrow.logger.js",
+            "line": 63,
+            "description": "Console warn wrapper that also writes to the out file\nif it was specified in the server options",
+            "itemtype": "method",
+            "name": "warn",
+            "params": [
+                {
+                    "name": "warning",
+                    "description": "",
+                    "type": "String"
+                }
+            ],
+            "class": "Logger"
+        },
+        {
+            "file": "../source/monobrow.logger.js",
+            "line": 79,
+            "description": "Console error wrapper that also writes to the error file\nif it was specified in the server options",
+            "itemtype": "method",
+            "name": "error",
+            "params": [
+                {
+                    "name": "error",
+                    "description": "",
+                    "type": "String"
+                }
+            ],
+            "class": "Logger"
+        },
+        {
+            "file": "../source/monobrow.manager.js",
+            "line": 19,
+            "description": "Called when a socket trys to connect to the server.",
+            "itemtype": "method",
+            "name": "onConnection",
+            "params": [
+                {
+                    "name": "connection",
+                    "description": "",
+                    "type": "net.Socket"
+                }
+            ],
+            "class": "Manager"
+        },
+        {
+            "file": "../source/monobrow.manager.js",
+            "line": 61,
+            "description": "Checks to see if the connection should be allowed\nor not. This is based on whitelisted domains and IP\naddresses in the server config.",
+            "itemtype": "method",
+            "name": "isConnectionAllowed",
+            "params": [
+                {
+                    "name": "connection",
+                    "description": "",
+                    "type": "net.Socket"
+                }
+            ],
+            "return": {
+                "description": "Boolean Whether the connection is allowed or not"
+            },
+            "class": "Manager"
+        },
+        {
+            "file": "../source/monobrow.manager.js",
+            "line": 75,
+            "description": "Adds a connection from the manager.",
+            "itemtype": "method",
+            "name": "addConnection",
+            "params": [
+                {
+                    "name": "connection",
+                    "description": "",
+                    "type": "net.Socket"
+                }
+            ],
+            "class": "Manager"
+        },
+        {
+            "file": "../source/monobrow.manager.js",
+            "line": 88,
+            "description": "Removes a connection from the manager.",
+            "itemtype": "method",
+            "name": "removeConnection",
+            "params": [
+                {
+                    "name": "connection",
+                    "description": "",
+                    "type": "net.Socket"
+                }
+            ],
+            "class": "Manager"
+        },
+        {
+            "file": "../source/monobrow.manager.js",
+            "line": 105,
+            "description": "Broadcasts a message to all connections.",
+            "itemtype": "method",
+            "name": "broadcast",
+            "params": [
+                {
+                    "name": "message",
+                    "description": "",
+                    "type": "String"
+                }
+            ],
+            "class": "Manager"
+        },
+        {
+            "file": "../source/monobrow.manager.js",
+            "line": 124,
+            "itemtype": "property",
+            "name": "CONNECTION_MADE",
+            "type": "String",
+            "static": 1,
+            "class": "Manager"
+        },
+        {
+            "file": "../source/monobrow.manager.js",
+            "line": 131,
+            "itemtype": "property",
+            "name": "CONNECTION_LOST",
+            "type": "String",
+            "static": 1,
+            "class": "Manager"
+        }
+    ],
+    "warnings": []
+}
