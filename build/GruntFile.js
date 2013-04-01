@@ -34,7 +34,7 @@ module.exports = function(grunt) {
     };
 
     var CLIENT_NAME = "monobrow-client";
-    var CLIENT_VERSION = '0.1.1';
+    var CLIENT_VERSION = '0.1.2';
     var CLIENT_DESCRIPTION = "Monobrow node socket client.";
     var CLIENT_PACKAGE = {
         "name": CLIENT_NAME,

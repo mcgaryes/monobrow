@@ -6,11 +6,9 @@
 
 You'll need to download, install and run the monobrow server to fully take advantage of the client. You can find the monobrow server [here](https://npmjs.org/package/monobrow).
 
-	<pre>
 	var Client = require("monobrow.client");
 	var client = new Client();
 	client.connect();
-	</pre>
 
 ### API Documentation
 
