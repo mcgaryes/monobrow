@@ -4,6 +4,5 @@ clients/*
 artwork/*
 npm-debug.log
 node_modules
-docs/*
 source/*
 .jshintrc

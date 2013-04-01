@@ -26,7 +26,7 @@ module.exports = function(grunt) {
             "type": "MIT",
             "url": URL + "/master/LICENSE"
         }],
-        "dependecies": {
+        "dependencies": {
             "underscore": "1.x.x",
             "backbone": "1.x.x",
             "ansi-color": "0.2.1"
@@ -34,7 +34,7 @@ module.exports = function(grunt) {
     };
 
     var CLIENT_NAME = "monobrow-client";
-    var CLIENT_VERSION = '0.1.0';
+    var CLIENT_VERSION = '0.1.1';
     var CLIENT_DESCRIPTION = "Monobrow node socket client.";
     var CLIENT_PACKAGE = {
         "name": CLIENT_NAME,
@@ -54,7 +54,7 @@ module.exports = function(grunt) {
             "type": "MIT",
             "url": URL + "/master/LICENSE"
         }],
-        "dependecies": {
+        "dependencies": {
             "underscore": "1.x.x",
             "backbone": "1.x.x",
             "ansi-color": "0.2.1"
