@@ -1,6 +1,6 @@
 "use strict";
 
-var Server = require("../../../monobrow.js").Server;
+var Server = require("../../../monobrow").Server;
 
 var server = new Server();
 server.start();

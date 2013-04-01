@@ -1,4 +1,4 @@
-var Client = require("../../../clients/node/monobrow.client");
+var Client = require("../../../clients/node/monobrow-client");
 
 var interval;
 var counter = 0;

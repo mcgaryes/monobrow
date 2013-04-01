@@ -28,19 +28,18 @@ Object.defineProperties(Logger.prototype, {
 	 * a timestamp for use in logging
 	 * @property _timestamp
 	 * @type String
+	 * @for Logger
 	 * @private
 	 */
 	_timestamp: {
 		get: function() {
-
 			var date = new Date();
-			var y = date.getUTCFullYear();
-			var mo = date.getUTCMonth() >= 10 ? date.getUTCMonth() + 1 : "0" + (date.getUTCMonth() + 1);
-			var d = date.getUTCDate() >= 10 ? date.getUTCDate() : "0" + date.getUTCDate();
-			var h = date.getUTCHours() >= 10 ? date.getUTCHours() : "0" + date.getUTCHours();
-			var mi = date.getUTCMinutes() >= 10 ? date.getUTCMinutes() : "0" + date.getUTCMinutes();
-			var s = date.getUTCSeconds() >= 10 ? date.getUTCSeconds() : "0" + date.getUTCSeconds();
-
+			var y = date.getFullYear();
+			var mo = date.getMonth() > 10 ? date.getMonth() + 1 : "0" + (date.getMonth() + 1);
+			var d = date.getDate() > 10 ? date.getDate() : "0" + date.getDate();
+			var h = date.getHours() > 10 ? date.getHours() : "0" + date.getHours();
+			var mi = date.getMinutes() > 10 ? date.getMinutes() : "0" + date.getMinutes();
+			var s = date.getSeconds() > 10 ? date.getSeconds() : "0" + date.getSeconds();
 			return y + "." + mo + "." + d + " " + h + ":" + mi + ":" + s;
 		}
 	},
@@ -50,6 +49,7 @@ Object.defineProperties(Logger.prototype, {
 	 * if it was specified in the server options
 	 * @method log
 	 * @param {String} message
+	 * @for Logger
 	 */
 	log: {
 		value: function(message) {
@@ -63,8 +63,9 @@ Object.defineProperties(Logger.prototype, {
 	/**
 	 * Console warn wrapper that also writes to the out file
 	 * if it was specified in the server options
-	 * @method log
+	 * @method warn
 	 * @param {String} warning
+	 * @for Logger
 	 */
 	warn: {
 		value: function(warning) {
@@ -80,6 +81,7 @@ Object.defineProperties(Logger.prototype, {
 	 * if it was specified in the server options
 	 * @method error
 	 * @param {String} error
+	 * @for Logger
 	 */
 	error: {
 		value: function(error) {

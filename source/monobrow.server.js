@@ -78,6 +78,7 @@ Server.prototype = Object.create(Backbone.Events, {
 	 * Initialized the server instance
 	 * @method __initialize
 	 * @param {Object} options The options passed through the constructor
+	 * @private
 	 */
 	__initialize:{
 		value:function(options){
