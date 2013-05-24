@@ -1,0 +1,352 @@
+{
+    "project": {
+        "name": "Monobrow-Node-Client",
+        "description": "Monobrow-Node-Client",
+        "version": "0.1.0",
+        "url": "https://github.com/mcgaryes/monobrow"
+    },
+    "files": {
+        "../src/client.js": {
+            "name": "../src/client.js",
+            "modules": {},
+            "classes": {
+                "Client": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "../src/constants.js": {
+            "name": "../src/constants.js",
+            "modules": {},
+            "classes": {},
+            "fors": {
+                "Client": 1
+            },
+            "namespaces": {}
+        },
+        "../src/logger.js": {
+            "name": "../src/logger.js",
+            "modules": {},
+            "classes": {
+                "Logger": 1
+            },
+            "fors": {
+                "Logger": 1
+            },
+            "namespaces": {}
+        }
+    },
+    "modules": {},
+    "classes": {
+        "Client": {
+            "name": "Client",
+            "shortname": "Client",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "../src/client.js",
+            "line": 8,
+            "description": "Client for connecting to a Monobrow server.",
+            "is_constructor": 1
+        },
+        "Logger": {
+            "name": "Logger",
+            "shortname": "Logger",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "../src/logger.js",
+            "line": 6,
+            "description": "Helper prototype for logging manager and server messages,\nwarnings, and errors. Also writes to out and error files if\nthey are specified in the server config",
+            "is_constructor": 1,
+            "access": "private",
+            "tagname": ""
+        }
+    },
+    "classitems": [
+        {
+            "file": "../src/client.js",
+            "line": 29,
+            "description": "Public getter for the current state of the client.",
+            "itemtype": "property",
+            "name": "state",
+            "type": "String",
+            "class": "Client"
+        },
+        {
+            "file": "../src/client.js",
+            "line": 40,
+            "description": "Public getter for the previous state of the client.",
+            "itemtype": "property",
+            "name": "previousState",
+            "type": "String",
+            "class": "Client"
+        },
+        {
+            "file": "../src/client.js",
+            "line": 51,
+            "description": "The address the client is pointing as",
+            "itemtype": "property",
+            "name": "address",
+            "type": "String",
+            "class": "Client"
+        },
+        {
+            "file": "../src/client.js",
+            "line": 72,
+            "description": "The total number of siblings a client has. A sibling is considered any\nconnection that sits beside this client on the server (so another connection\nto the same server).",
+            "itemtype": "property",
+            "name": "totalSiblings",
+            "type": "Number",
+            "class": "Client"
+        },
+        {
+            "file": "../src/client.js",
+            "line": 90,
+            "description": "Connects the client to the remote socket server.",
+            "itemtype": "method",
+            "name": "connect",
+            "class": "Client"
+        },
+        {
+            "file": "../src/client.js",
+            "line": 112,
+            "description": "Diconnects the client from the remote socket server.",
+            "itemtype": "method",
+            "name": "disconnect",
+            "class": "Client"
+        },
+        {
+            "file": "../src/client.js",
+            "line": 124,
+            "description": "Emits a message to the server the client is connected to.",
+            "itemtype": "method",
+            "name": "emit",
+            "params": [
+                {
+                    "name": "type",
+                    "description": "The type of event being triggered",
+                    "type": "String"
+                },
+                {
+                    "name": "data",
+                    "description": "*Optional* - The data you want to pass as the body of the event",
+                    "type": "Object"
+                }
+            ],
+            "class": "Client"
+        },
+        {
+            "file": "../src/client.js",
+            "line": 159,
+            "description": "Initialization functionality for the client instance. Sets its initial\nstate and creates and adds event listeners to a new socket.",
+            "itemtype": "method",
+            "name": "__initialize",
+            "access": "private",
+            "tagname": "",
+            "class": "Client"
+        },
+        {
+            "file": "../src/client.js",
+            "line": 196,
+            "description": "This method is just used for logging purposes. If an error occurs\nthe close method is called immediately after and we'll handle\ntriggering the state change there, not here.",
+            "itemtype": "method",
+            "name": "__handleSocketError",
+            "params": [
+                {
+                    "name": "e",
+                    "description": "Socket error object",
+                    "type": "Object"
+                }
+            ],
+            "access": "private",
+            "tagname": "",
+            "class": "Client"
+        },
+        {
+            "file": "../src/client.js",
+            "line": 218,
+            "description": "Handler functionality for when the client socket instance connects to the server.",
+            "itemtype": "method",
+            "name": "__handleSocketConnect",
+            "access": "private",
+            "tagname": "",
+            "class": "Client"
+        },
+        {
+            "file": "../src/client.js",
+            "line": 232,
+            "description": "Handler functionality for when the client socket instance recieves data from\nthe server. This is the single entry point for data and the data recieved is only\nhandled if structured correctly with a `type` and `data` attribute on the\nincoming data object.",
+            "itemtype": "method",
+            "name": "__handleSocketData",
+            "params": [
+                {
+                    "name": "data",
+                    "description": "The raw data sent from the server",
+                    "type": "Buffer"
+                }
+            ],
+            "access": "private",
+            "tagname": "",
+            "class": "Client"
+        },
+        {
+            "file": "../src/client.js",
+            "line": 312,
+            "description": "Handler functionality for when the socket connection is closed. Fires a\nstate error state change event if the socket was closed due to error. If there\nwas no error then the handler dispatches a disconnected state change event.",
+            "itemtype": "method",
+            "name": "__handleSocketClose",
+            "params": [
+                {
+                    "name": "error",
+                    "description": "Socket error object",
+                    "type": "Object"
+                }
+            ],
+            "access": "private",
+            "tagname": "",
+            "class": "Client"
+        },
+        {
+            "file": "../src/constants.js",
+            "line": 3,
+            "description": "State change event fired on a state change of the client.",
+            "itemtype": "property",
+            "name": "STATE_CHANGE_EVENT",
+            "type": "String",
+            "static": 1,
+            "class": "Client"
+        },
+        {
+            "file": "../src/constants.js",
+            "line": 12,
+            "description": "The data event is fired when incoming data is recognized. The data\npassed is the raw buffer. Call toString on the data to get the string\nrepresentation of the data.",
+            "itemtype": "property",
+            "name": "DATA_EVENT",
+            "type": "String",
+            "static": 1,
+            "class": "Client"
+        },
+        {
+            "file": "../src/constants.js",
+            "line": 23,
+            "description": "A connection was just ADDED to the same server this client is\nlistening to. This relationship is denoted as a sibling relationship.",
+            "itemtype": "property",
+            "name": "SIBLING_ADDED_EVENT",
+            "type": "String",
+            "static": 1,
+            "class": "Client"
+        },
+        {
+            "file": "../src/constants.js",
+            "line": 33,
+            "description": "A connection was just REMOVED to the same server this client is\nlistening to. This relationship is denoted as a sibling relationship.",
+            "itemtype": "property",
+            "name": "SIBLING_REMOVED_EVENT",
+            "type": "String",
+            "static": 1,
+            "class": "Client"
+        },
+        {
+            "file": "../src/constants.js",
+            "line": 43,
+            "description": "The client is connected to the remote socket server.",
+            "itemtype": "property",
+            "name": "STATE_CONNECTED",
+            "type": "String",
+            "static": 1,
+            "class": "Client"
+        },
+        {
+            "file": "../src/constants.js",
+            "line": 52,
+            "description": "The client is connected to the remote socket server.",
+            "itemtype": "property",
+            "name": "STATE_CONNECTED",
+            "type": "String",
+            "static": 1,
+            "class": "Client"
+        },
+        {
+            "file": "../src/constants.js",
+            "line": 61,
+            "description": "The client has diconnected from the remote socket server.",
+            "itemtype": "property",
+            "name": "STATE_DISCONNECTED",
+            "type": "String",
+            "static": 1,
+            "class": "Client"
+        },
+        {
+            "file": "../src/constants.js",
+            "line": 70,
+            "description": "The client has encountered an error connecting to the remote socket server.",
+            "itemtype": "property",
+            "name": "STATE_ERROR",
+            "type": "String",
+            "static": 1,
+            "class": "Client"
+        },
+        {
+            "file": "../src/logger.js",
+            "line": 23,
+            "description": "Getter that grabs and formats the current date and creates\na timestamp for use in logging",
+            "itemtype": "property",
+            "name": "_timestamp",
+            "type": "String",
+            "access": "private",
+            "tagname": "",
+            "class": "Logger"
+        },
+        {
+            "file": "../src/logger.js",
+            "line": 44,
+            "description": "Console log wrapper that also writes to the out file\nif it was specified in the server options",
+            "itemtype": "method",
+            "name": "log",
+            "params": [
+                {
+                    "name": "message",
+                    "description": "",
+                    "type": "String"
+                }
+            ],
+            "class": "Logger"
+        },
+        {
+            "file": "../src/logger.js",
+            "line": 60,
+            "description": "Console warn wrapper that also writes to the out file\nif it was specified in the server options",
+            "itemtype": "method",
+            "name": "warn",
+            "params": [
+                {
+                    "name": "warning",
+                    "description": "",
+                    "type": "String"
+                }
+            ],
+            "class": "Logger"
+        },
+        {
+            "file": "../src/logger.js",
+            "line": 76,
+            "description": "Console error wrapper that also writes to the error file\nif it was specified in the server options",
+            "itemtype": "method",
+            "name": "error",
+            "params": [
+                {
+                    "name": "error",
+                    "description": "",
+                    "type": "String"
+                }
+            ],
+            "class": "Logger"
+        }
+    ],
+    "warnings": []
+}

@@ -1,0 +1,21 @@
+{
+    "bitwise"       :false,
+    "curly"         : true,
+    "eqeqeq"        : true,
+    "immed"         : true,
+    "newcap"        : true,
+    "nonew"         : true,
+    "undef"         : true,
+    "strict"        : false,
+    "trailing"      : true,
+
+    "debug"         : true,
+    "es5"           : true,
+
+    "browser"       : true,     
+    "jquery"        : true,
+    "yui"           : true,
+    "node"          : true,
+    
+    "predef"        : []
+}

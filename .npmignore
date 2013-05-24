@@ -1,8 +1,0 @@
-build/*
-build/*.json
-clients/*
-artwork/*
-npm-debug.log
-node_modules
-source/*
-.jshintrc

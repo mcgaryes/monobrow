@@ -1,0 +1,479 @@
+{
+    "project": {
+        "name": "Monobrow",
+        "description": "Monobrow",
+        "version": "0.4.0",
+        "url": "https://github.com/mcgaryes/monobrow"
+    },
+    "files": {
+        "../src/connection-manager.js": {
+            "name": "../src/connection-manager.js",
+            "modules": {},
+            "classes": {
+                "ConnectionManager": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "../src/connection.js": {
+            "name": "../src/connection.js",
+            "modules": {},
+            "classes": {
+                "Connection": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        },
+        "../src/constants.js": {
+            "name": "../src/constants.js",
+            "modules": {},
+            "classes": {},
+            "fors": {
+                "Server": 1,
+                "ConnectionManager": 1,
+                "Connection": 1
+            },
+            "namespaces": {}
+        },
+        "../src/logger.js": {
+            "name": "../src/logger.js",
+            "modules": {},
+            "classes": {
+                "Logger": 1
+            },
+            "fors": {
+                "Logger": 1
+            },
+            "namespaces": {}
+        },
+        "../src/server.js": {
+            "name": "../src/server.js",
+            "modules": {},
+            "classes": {
+                "Server": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        }
+    },
+    "modules": {},
+    "classes": {
+        "ConnectionManager": {
+            "name": "ConnectionManager",
+            "shortname": "ConnectionManager",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "../src/connection-manager.js",
+            "line": 8,
+            "description": "Manages connections for the socket server.",
+            "is_constructor": 1
+        },
+        "Connection": {
+            "name": "Connection",
+            "shortname": "Connection",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "../src/connection.js",
+            "line": 8,
+            "is_constructor": 1
+        },
+        "Server": {
+            "name": "Server",
+            "shortname": "Server",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "../src/server.js",
+            "line": 10,
+            "description": "Monobrow server constructor. The server handles the creation of a nodejs socket\nserver as well as as an instance of the monobrow connection manager.",
+            "is_constructor": 1
+        },
+        "Logger": {
+            "name": "Logger",
+            "shortname": "Logger",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "file": "../src/logger.js",
+            "line": 6,
+            "description": "Helper prototype for logging manager and server messages,\nwarnings, and errors. Also writes to out and error files if\nthey are specified in the server config",
+            "is_constructor": 1
+        }
+    },
+    "classitems": [
+        {
+            "file": "../src/connection-manager.js",
+            "line": 26,
+            "description": "Called when a socket trys to connect to the server.",
+            "itemtype": "method",
+            "name": "handleSocketConnection",
+            "params": [
+                {
+                    "name": "socket",
+                    "description": "",
+                    "type": "net.Socket"
+                }
+            ],
+            "class": "ConnectionManager"
+        },
+        {
+            "file": "../src/connection-manager.js",
+            "line": 69,
+            "description": "Broadcasts a message to all connections.",
+            "itemtype": "method",
+            "name": "broadcast",
+            "params": [
+                {
+                    "name": "message",
+                    "description": "",
+                    "type": "Object"
+                }
+            ],
+            "class": "ConnectionManager"
+        },
+        {
+            "file": "../src/connection-manager.js",
+            "line": 95,
+            "description": "Checks to see if the connection should be allowed\nor not. This is based on whitelisted domains and IP\naddresses in the server config.",
+            "itemtype": "method",
+            "name": "__isConnectionAllowed",
+            "params": [
+                {
+                    "name": "connection",
+                    "description": "",
+                    "type": "Connection"
+                }
+            ],
+            "return": {
+                "description": "Boolean Whether the connection is allowed or not"
+            },
+            "access": "private",
+            "tagname": "",
+            "class": "ConnectionManager"
+        },
+        {
+            "file": "../src/connection-manager.js",
+            "line": 110,
+            "description": "Adds a connection from the manager.",
+            "itemtype": "method",
+            "name": "__addConnection",
+            "params": [
+                {
+                    "name": "connection",
+                    "description": "",
+                    "type": "Connection"
+                }
+            ],
+            "access": "private",
+            "tagname": "",
+            "class": "ConnectionManager"
+        },
+        {
+            "file": "../src/connection-manager.js",
+            "line": 139,
+            "description": "Removes a connection from the manager.",
+            "itemtype": "method",
+            "name": "__removeConnection",
+            "params": [
+                {
+                    "name": "connection",
+                    "description": "",
+                    "type": "Connection"
+                }
+            ],
+            "access": "private",
+            "tagname": "",
+            "class": "ConnectionManager"
+        },
+        {
+            "file": "../src/connection.js",
+            "line": 28,
+            "itemtype": "property",
+            "name": "cid",
+            "type": "String",
+            "class": "Connection"
+        },
+        {
+            "file": "../src/connection.js",
+            "line": 37,
+            "itemtype": "property",
+            "name": "socket",
+            "type": "{net.Socket}",
+            "class": "Connection"
+        },
+        {
+            "file": "../src/connection.js",
+            "line": 50,
+            "itemtype": "method",
+            "name": "sendMessage",
+            "params": [
+                {
+                    "name": "$msg",
+                    "description": "",
+                    "type": "String"
+                }
+            ],
+            "class": "Connection"
+        },
+        {
+            "file": "../src/connection.js",
+            "line": 69,
+            "itemtype": "method",
+            "name": "__initialize",
+            "access": "private",
+            "tagname": "",
+            "class": "Connection"
+        },
+        {
+            "file": "../src/connection.js",
+            "line": 104,
+            "itemtype": "method",
+            "name": "__completeWebSocketHandshake",
+            "params": [
+                {
+                    "name": "$data",
+                    "description": "",
+                    "type": "String"
+                }
+            ],
+            "access": "private",
+            "tagname": "",
+            "class": "Connection"
+        },
+        {
+            "file": "../src/connection.js",
+            "line": 127,
+            "itemtype": "method",
+            "name": "__encodeMessage",
+            "params": [
+                {
+                    "name": "$msg",
+                    "description": "",
+                    "type": "String"
+                }
+            ],
+            "access": "private",
+            "tagname": "",
+            "class": "Connection"
+        },
+        {
+            "file": "../src/connection.js",
+            "line": 177,
+            "itemtype": "method",
+            "name": "__processWebSocketBuffer",
+            "params": [
+                {
+                    "name": "$buffer",
+                    "description": "",
+                    "type": "Buffer"
+                }
+            ],
+            "access": "private",
+            "tagname": "",
+            "class": "Connection"
+        },
+        {
+            "file": "../src/connection.js",
+            "line": 238,
+            "itemtype": "method",
+            "name": "__unmaskPayload",
+            "params": [
+                {
+                    "name": "$maskBytes",
+                    "description": "",
+                    "type": "Array"
+                },
+                {
+                    "name": "$data",
+                    "description": "",
+                    "type": "String"
+                }
+            ],
+            "access": "private",
+            "tagname": "",
+            "class": "Connection"
+        },
+        {
+            "file": "../src/constants.js",
+            "line": 5,
+            "itemtype": "property",
+            "name": "INITIALIZED",
+            "static": 1,
+            "class": "Server"
+        },
+        {
+            "file": "../src/constants.js",
+            "line": 12,
+            "itemtype": "property",
+            "name": "RUNNING",
+            "static": 1,
+            "class": "Server"
+        },
+        {
+            "file": "../src/constants.js",
+            "line": 19,
+            "itemtype": "property",
+            "name": "STOPPED",
+            "static": 1,
+            "class": "Server"
+        },
+        {
+            "file": "../src/constants.js",
+            "line": 26,
+            "itemtype": "property",
+            "name": "STATE_CHANGE",
+            "static": 1,
+            "class": "Server"
+        },
+        {
+            "file": "../src/constants.js",
+            "line": 33,
+            "itemtype": "property",
+            "name": "CLIENT_DID_CONNECT",
+            "static": 1,
+            "class": "Server"
+        },
+        {
+            "file": "../src/constants.js",
+            "line": 40,
+            "itemtype": "property",
+            "name": "CLIENT_DID_DISCONNECT",
+            "static": 1,
+            "class": "Server"
+        },
+        {
+            "file": "../src/constants.js",
+            "line": 50,
+            "itemtype": "property",
+            "name": "CONNECTION_MADE",
+            "static": 1,
+            "class": "ConnectionManager"
+        },
+        {
+            "file": "../src/constants.js",
+            "line": 57,
+            "itemtype": "property",
+            "name": "CONNECTION_LOST",
+            "static": 1,
+            "class": "ConnectionManager"
+        },
+        {
+            "file": "../src/constants.js",
+            "line": 67,
+            "itemtype": "property",
+            "name": "WEB_SOCKET",
+            "static": 1,
+            "class": "Connection"
+        },
+        {
+            "file": "../src/constants.js",
+            "line": 74,
+            "itemtype": "property",
+            "name": "SOCKET",
+            "static": 1,
+            "class": "Connection"
+        },
+        {
+            "file": "../src/logger.js",
+            "line": 22,
+            "description": "Getter that grabs and formats the current date and creates\na timestamp for use in logging",
+            "itemtype": "property",
+            "name": "_timestamp",
+            "type": "String",
+            "access": "private",
+            "tagname": "",
+            "class": "Logger"
+        },
+        {
+            "file": "../src/logger.js",
+            "line": 43,
+            "description": "Console log wrapper that also writes to the out file\nif it was specified in the server options",
+            "itemtype": "method",
+            "name": "log",
+            "params": [
+                {
+                    "name": "message",
+                    "description": "",
+                    "type": "String"
+                }
+            ],
+            "class": "Logger"
+        },
+        {
+            "file": "../src/logger.js",
+            "line": 59,
+            "description": "Console warn wrapper that also writes to the out file\nif it was specified in the server options",
+            "itemtype": "method",
+            "name": "warn",
+            "params": [
+                {
+                    "name": "warning",
+                    "description": "",
+                    "type": "String"
+                }
+            ],
+            "class": "Logger"
+        },
+        {
+            "file": "../src/logger.js",
+            "line": 75,
+            "description": "Console error wrapper that also writes to the error file\nif it was specified in the server options",
+            "itemtype": "method",
+            "name": "error",
+            "params": [
+                {
+                    "name": "error",
+                    "description": "",
+                    "type": "String"
+                }
+            ],
+            "class": "Logger"
+        },
+        {
+            "file": "../src/server.js",
+            "line": 31,
+            "itemtype": "property",
+            "name": "_address",
+            "type": "String",
+            "access": "private",
+            "tagname": "",
+            "class": "Server"
+        },
+        {
+            "file": "../src/server.js",
+            "line": 46,
+            "description": "Starts the TCP server on the specified port and host",
+            "itemtype": "method",
+            "name": "start",
+            "class": "Server"
+        },
+        {
+            "file": "../src/server.js",
+            "line": 80,
+            "description": "Initialized the server instance",
+            "itemtype": "method",
+            "name": "__initialize",
+            "params": [
+                {
+                    "name": "options",
+                    "description": "The options passed through the constructor",
+                    "type": "Object"
+                }
+            ],
+            "access": "private",
+            "tagname": "",
+            "class": "Server"
+        }
+    ],
+    "warnings": []
+}

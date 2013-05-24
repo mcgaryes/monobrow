@@ -1,0 +1,10 @@
+{
+  "name": "monobrow",
+  "version": "0.1.0",
+  "description": "monobrow",
+  "private": true,
+  "dependencies": {
+    "underscore": "1.x.x",
+    "ansi-color": "0.2.1"
+  }
+}
