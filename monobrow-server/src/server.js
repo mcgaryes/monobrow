@@ -1,3 +1,7 @@
+// ============================================================
+// === Imports ================================================
+// ============================================================
+
 var _ = require("underscore");
 var EventEmitter = require("events").EventEmitter;
 var net = require('net');
@@ -5,7 +9,10 @@ var Util = require("util");
 
 var Logger = require("./logger");
 var ConnectionManager = require("./connection-manager");
-var ServerConstants = require("./constants").ServerConstants;
+
+// ============================================================
+// === Server =================================================
+// ============================================================
 
 /**
  * Monobrow server constructor. The server handles the creation of a nodejs socket
@@ -106,5 +113,48 @@ Server.prototype = Object.create(EventEmitter.prototype, {
 	}
 });
 
-// extend the server with the server constants
-_.extend(Server, ServerConstants);
+// ============================================================
+// === Server Constants =======================================
+// ============================================================
+
+/**
+ * @property INITIALIZED
+ * @for Server
+ * @static
+ */
+Server.INITIALIZED = 0;
+
+/**
+ * @property RUNNING
+ * @for Server
+ * @static
+ */
+Server.RUNNING = 1;
+
+/**
+ * @property STOPPED
+ * @for Server
+ * @static
+ */
+Server.STOPPED = 2;
+
+/**
+ * @property STATE_CHANGE
+ * @for Server
+ * @static
+ */
+Server.STATE_CHANGE = "stageChange";
+
+/**
+ * @property CLIENT_DID_CONNECT
+ * @for Server
+ * @static
+ */
+Server.CLIENT_DID_CONNECT = "clientDidConnect";
+
+/**
+ * @property CLIENT_DID_DISCONNECT
+ * @for Server
+ * @static
+ */
+Server.CLIENT_DID_DISCONNECT = "clientDidDisconnect";

@@ -17,5 +17,9 @@
     "yui"           : true,
     "node"          : true,
     
-    "predef"        : []
+    "predef"        : [
+        "describe",
+        "it",
+        "expect"
+    ]
 }

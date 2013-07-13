@@ -1,4 +1,4 @@
-var Monobrow = require("../monobrow/monobrow");
+var Monobrow = require("../monobrow-server/monobrow");
 
 var server = new Monobrow.Server({
 	host:"localhost",

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Server - Monobrow</title>
+    <title>Client - Monobrow</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -90,16 +90,12 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1>Server Class</h1>
+                        <h1>Client Class</h1>
 <div class="box meta">
     
 
     
 
-    
-        <div class="foundat">
-            Defined in: <a href="../files/.._src_server.js.html#l10"><code>..&#x2F;src&#x2F;server.js:10</code></a>
-        </div>
     
 
     
@@ -110,75 +106,15 @@
 
 
 <div class="box intro">
-    <p>Monobrow server constructor. The server handles the creation of a nodejs socket
-server as well as as an instance of the monobrow connection manager.</p>
-</div>
-
-
-    <div class="constructor">
-        <h2>Constructor</h2>
-        <div id="method_Server" class="method item">
-    <h3 class="name"><code>Server</code></h3>
-
-    
-        <span class="paren">()</span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/.._src_server.js.html#l10"><code>..&#x2F;src&#x2F;server.js:10</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        
-    </div>
-
-    
-
-    
-
     
 </div>
 
-    </div>
 
 
 <div id="classdocs" class="tabview">
     <ul class="api-class-tabs">
         <li class="api-class-tab index"><a href="#index">Index</a></li>
 
-        
-            <li class="api-class-tab methods"><a href="#methods">Methods</a></li>
         
         
             <li class="api-class-tab properties"><a href="#properties">Properties</a></li>
@@ -192,28 +128,6 @@ server as well as as an instance of the monobrow connection manager.</p>
             <h2 class="off-left">Item Index</h2>
 
             
-                <div class="index-section methods">
-                    <h3>Methods</h3>
-
-                    <ul class="index-list methods">
-                        
-                            <li class="index-item method private">
-                                <a href="#method___initialize">__initialize</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item method">
-                                <a href="#method_start">start</a>
-
-                                
-                                
-                            </li>
-                        
-                    </ul>
-                </div>
-            
 
             
                 <div class="index-section properties">
@@ -222,14 +136,7 @@ server as well as as an instance of the monobrow connection manager.</p>
                     <ul class="index-list properties">
                         
                             <li class="index-item property private">
-                                <a href="#property__address">_address</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item property">
-                                <a href="#property_CLIENT_DID_CONNECT">CLIENT_DID_CONNECT</a>
+                                <a href="#property_"></a>
 
                                 
                                     <span class="flag static">static</span>
@@ -237,8 +144,8 @@ server as well as as an instance of the monobrow connection manager.</p>
                                 
                             </li>
                         
-                            <li class="index-item property">
-                                <a href="#property_CLIENT_DID_DISCONNECT">CLIENT_DID_DISCONNECT</a>
+                            <li class="index-item property private">
+                                <a href="#property_"></a>
 
                                 
                                     <span class="flag static">static</span>
@@ -246,8 +153,8 @@ server as well as as an instance of the monobrow connection manager.</p>
                                 
                             </li>
                         
-                            <li class="index-item property">
-                                <a href="#property_INITIALIZED">INITIALIZED</a>
+                            <li class="index-item property private">
+                                <a href="#property_"></a>
 
                                 
                                     <span class="flag static">static</span>
@@ -255,8 +162,8 @@ server as well as as an instance of the monobrow connection manager.</p>
                                 
                             </li>
                         
-                            <li class="index-item property">
-                                <a href="#property_RUNNING">RUNNING</a>
+                            <li class="index-item property private">
+                                <a href="#property_"></a>
 
                                 
                                     <span class="flag static">static</span>
@@ -264,8 +171,8 @@ server as well as as an instance of the monobrow connection manager.</p>
                                 
                             </li>
                         
-                            <li class="index-item property">
-                                <a href="#property_STATE_CHANGE">STATE_CHANGE</a>
+                            <li class="index-item property private">
+                                <a href="#property_"></a>
 
                                 
                                     <span class="flag static">static</span>
@@ -273,8 +180,17 @@ server as well as as an instance of the monobrow connection manager.</p>
                                 
                             </li>
                         
-                            <li class="index-item property">
-                                <a href="#property_STOPPED">STOPPED</a>
+                            <li class="index-item property private">
+                                <a href="#property_"></a>
+
+                                
+                                    <span class="flag static">static</span>
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property private">
+                                <a href="#property_"></a>
 
                                 
                                     <span class="flag static">static</span>
@@ -292,164 +208,15 @@ server as well as as an instance of the monobrow connection manager.</p>
         </div>
 
         
-            <div id="methods" class="api-class-tabpanel">
-                <h2 class="off-left">Methods</h2>
-
-                
-                    <div id="method___initialize" class="method item private">
-    <h3 class="name"><code>__initialize</code></h3>
-
-    
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code>options</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
-    
-
-    
-
-    
-
-    
-        <span class="flag private">private</span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/.._src_server.js.html#l80"><code>..&#x2F;src&#x2F;server.js:80</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Initialized the server instance</p>
-    </div>
-
-    
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name">options</code>
-                        <span class="type">Object</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>The options passed through the constructor</p>
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="method_start" class="method item">
-    <h3 class="name"><code>start</code></h3>
-
-    
-        <span class="paren">()</span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/.._src_server.js.html#l46"><code>..&#x2F;src&#x2F;server.js:46</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Starts the TCP server on the specified port and host</p>
-    </div>
-
-    
-
-    
-
-    
-</div>
-
-                
-            </div>
-        
 
         
             <div id="properties" class="api-class-tabpanel">
                 <h2 class="off-left">Properties</h2>
 
                 
-                    <div id="property__address" class="property item private">
-    <h3 class="name"><code>_address</code></h3>
-    <span class="type">String</span>
+                    <div id="property_" class="property item private">
+    <h3 class="name"><code></code></h3>
+    <span class="type">Number</span>
 
     
 
@@ -460,6 +227,8 @@ server as well as as an instance of the monobrow connection manager.</p>
     
 
     
+        <span class="flag static">static</span>
+    
 
     <div class="meta">
         
@@ -472,7 +241,7 @@ server as well as as an instance of the monobrow connection manager.</p>
             
         
         
-        <a href="../files/.._src_server.js.html#l31"><code>..&#x2F;src&#x2F;server.js:31</code></a>
+        <a href="../files/.._src_constants.js.html#l46"><code>..&#x2F;src&#x2F;constants.js:46</code></a>
         
         </p>
 
@@ -482,7 +251,7 @@ server as well as as an instance of the monobrow connection manager.</p>
     </div>
 
     <div class="description">
-        
+        <p>Normal closure; the connection successfully completed whatever purpose for which it was created.</p>
     </div>
 
     
@@ -493,12 +262,14 @@ server as well as as an instance of the monobrow connection manager.</p>
 </div>
 
                 
-                    <div id="property_CLIENT_DID_CONNECT" class="property item">
-    <h3 class="name"><code>CLIENT_DID_CONNECT</code></h3>
-    <span class="type">Unknown</span>
+                    <div id="property_" class="property item private">
+    <h3 class="name"><code></code></h3>
+    <span class="type">Number</span>
 
     
 
+    
+        <span class="flag private">private</span>
     
 
     
@@ -518,7 +289,7 @@ server as well as as an instance of the monobrow connection manager.</p>
             
         
         
-        <a href="../files/.._src_constants.js.html#l30"><code>..&#x2F;src&#x2F;constants.js:30</code></a>
+        <a href="../files/.._src_constants.js.html#l56"><code>..&#x2F;src&#x2F;constants.js:56</code></a>
         
         </p>
 
@@ -528,7 +299,8 @@ server as well as as an instance of the monobrow connection manager.</p>
     </div>
 
     <div class="description">
-        
+        <p>The endpoint is going away, either because of a server failure or because the browser is
+navigating away from the page that opened the connection.</p>
     </div>
 
     
@@ -539,12 +311,14 @@ server as well as as an instance of the monobrow connection manager.</p>
 </div>
 
                 
-                    <div id="property_CLIENT_DID_DISCONNECT" class="property item">
-    <h3 class="name"><code>CLIENT_DID_DISCONNECT</code></h3>
-    <span class="type">Unknown</span>
+                    <div id="property_" class="property item private">
+    <h3 class="name"><code></code></h3>
+    <span class="type">Number</span>
 
     
 
+    
+        <span class="flag private">private</span>
     
 
     
@@ -564,7 +338,7 @@ server as well as as an instance of the monobrow connection manager.</p>
             
         
         
-        <a href="../files/.._src_constants.js.html#l37"><code>..&#x2F;src&#x2F;constants.js:37</code></a>
+        <a href="../files/.._src_constants.js.html#l67"><code>..&#x2F;src&#x2F;constants.js:67</code></a>
         
         </p>
 
@@ -574,7 +348,7 @@ server as well as as an instance of the monobrow connection manager.</p>
     </div>
 
     <div class="description">
-        
+        <p>The endpoint is terminating the connection due to a protocol error.</p>
     </div>
 
     
@@ -585,12 +359,14 @@ server as well as as an instance of the monobrow connection manager.</p>
 </div>
 
                 
-                    <div id="property_INITIALIZED" class="property item">
-    <h3 class="name"><code>INITIALIZED</code></h3>
-    <span class="type">Unknown</span>
+                    <div id="property_" class="property item private">
+    <h3 class="name"><code></code></h3>
+    <span class="type">Number</span>
 
     
 
+    
+        <span class="flag private">private</span>
     
 
     
@@ -610,7 +386,7 @@ server as well as as an instance of the monobrow connection manager.</p>
             
         
         
-        <a href="../files/.._src_constants.js.html#l2"><code>..&#x2F;src&#x2F;constants.js:2</code></a>
+        <a href="../files/.._src_constants.js.html#l77"><code>..&#x2F;src&#x2F;constants.js:77</code></a>
         
         </p>
 
@@ -620,7 +396,8 @@ server as well as as an instance of the monobrow connection manager.</p>
     </div>
 
     <div class="description">
-        
+        <p>The connection is being terminated because the endpoint received data of a type it
+ cannot accept (for example, a text-only endpoint received binary data).</p>
     </div>
 
     
@@ -631,12 +408,14 @@ server as well as as an instance of the monobrow connection manager.</p>
 </div>
 
                 
-                    <div id="property_RUNNING" class="property item">
-    <h3 class="name"><code>RUNNING</code></h3>
-    <span class="type">Unknown</span>
+                    <div id="property_" class="property item private">
+    <h3 class="name"><code></code></h3>
+    <span class="type">Number</span>
 
     
 
+    
+        <span class="flag private">private</span>
     
 
     
@@ -656,7 +435,7 @@ server as well as as an instance of the monobrow connection manager.</p>
             
         
         
-        <a href="../files/.._src_constants.js.html#l9"><code>..&#x2F;src&#x2F;constants.js:9</code></a>
+        <a href="../files/.._src_constants.js.html#l88"><code>..&#x2F;src&#x2F;constants.js:88</code></a>
         
         </p>
 
@@ -666,7 +445,7 @@ server as well as as an instance of the monobrow connection manager.</p>
     </div>
 
     <div class="description">
-        
+        <p>The endpoint is terminating the connection because a data frame was received that is too large.</p>
     </div>
 
     
@@ -677,12 +456,14 @@ server as well as as an instance of the monobrow connection manager.</p>
 </div>
 
                 
-                    <div id="property_STATE_CHANGE" class="property item">
-    <h3 class="name"><code>STATE_CHANGE</code></h3>
-    <span class="type">Unknown</span>
+                    <div id="property_" class="property item private">
+    <h3 class="name"><code></code></h3>
+    <span class="type">Number</span>
 
     
 
+    
+        <span class="flag private">private</span>
     
 
     
@@ -702,7 +483,7 @@ server as well as as an instance of the monobrow connection manager.</p>
             
         
         
-        <a href="../files/.._src_constants.js.html#l23"><code>..&#x2F;src&#x2F;constants.js:23</code></a>
+        <a href="../files/.._src_constants.js.html#l98"><code>..&#x2F;src&#x2F;constants.js:98</code></a>
         
         </p>
 
@@ -712,7 +493,7 @@ server as well as as an instance of the monobrow connection manager.</p>
     </div>
 
     <div class="description">
-        
+        <p>Reserved.  Indicates that no status code was provided even though one was expected.</p>
     </div>
 
     
@@ -723,12 +504,14 @@ server as well as as an instance of the monobrow connection manager.</p>
 </div>
 
                 
-                    <div id="property_STOPPED" class="property item">
-    <h3 class="name"><code>STOPPED</code></h3>
-    <span class="type">Unknown</span>
+                    <div id="property_" class="property item private">
+    <h3 class="name"><code></code></h3>
+    <span class="type">Number</span>
 
     
 
+    
+        <span class="flag private">private</span>
     
 
     
@@ -748,7 +531,7 @@ server as well as as an instance of the monobrow connection manager.</p>
             
         
         
-        <a href="../files/.._src_constants.js.html#l16"><code>..&#x2F;src&#x2F;constants.js:16</code></a>
+        <a href="../files/.._src_constants.js.html#l108"><code>..&#x2F;src&#x2F;constants.js:108</code></a>
         
         </p>
 
@@ -758,7 +541,7 @@ server as well as as an instance of the monobrow connection manager.</p>
     </div>
 
     <div class="description">
-        
+        <p>Normal closure; the connection successfully completed whatever purpose for which it was created.</p>
     </div>
 
     

@@ -1,22 +1,30 @@
+// ============================================================
+// === Imports ================================================
+// ============================================================
+
 var _ = require("underscore");
 var EventEmitter = require("events").EventEmitter;
 var Crypto = require("crypto");
 
 var Logger = require("./logger");
-var ConnectionConstants = require("./constants").ConnectionConstants;
+
+// ============================================================
+// === Connection =============================================
+// ============================================================
 
 /**
+ * The Connection object helps with the reading and sending of messages between
+ * various types of sockets connections that may attempt to connect to the server
+ * the connection belongs to.
  * @class Connection
  * @constructor
  */
 var Connection = module.exports = function($options) {
 
-	this.cid = "cid" + Connection.idCounter++;
-
-	_.extend(this, $options);
-
+	this._cid = "cid" + Connection._cidCounter++;
+	this._socket = $options.socket;
+	_.extend(this, _.omit($options, ["socket"]));
 	this.__initialize();
-
 };
 
 Connection.prototype = Object.create(EventEmitter.prototype, {
@@ -26,20 +34,61 @@ Connection.prototype = Object.create(EventEmitter.prototype, {
 	// ============================================================
 
 	/**
+	 * The public getter for the connection instances cid
 	 * @property cid
 	 * @type String
 	 */
 	cid: {
-		value: null,
+		get: function() {
+			return this._cid;
+		}
+	},
+
+	/**
+	 * The remote port associated with the connections socket object
+	 * @property remotePort
+	 * @type String
+	 */
+	remotePort: {
+		get: function() {
+			return this._socket.remotePort;
+		}
+	},
+
+	/**
+	 * The type of socket connection of the connection instance
+	 * @property type
+	 * @type String
+	 * @default SOCKET
+	 */
+	type: {
+		value: Connection.TYPE_SOCKET,
+		writable: true
+	},
+
+	// ============================================================
+	// === Private Properties =====================================
+	// ============================================================
+
+	/**
+	 * Reference to the socket for the connection instance.
+	 * @property _socket
+	 * @type net.Socket
+	 * @private
+	 */
+	_socket: {
+		value: undefined,
 		writable: true
 	},
 
 	/**
-	 * @property socket
-	 * @type {net.Socket}
+	 * The private property connection id for the connection instance.
+	 * @property _cid
+	 * @type String
+	 * @private
 	 */
-	socket: {
-		value: null,
+	_cid: {
+		value: undefined,
 		writable: true
 	},
 
@@ -48,17 +97,29 @@ Connection.prototype = Object.create(EventEmitter.prototype, {
 	// ============================================================
 
 	/**
+	 * Send a message to the connection instance.
 	 * @method sendMessage
 	 * @param {String} $msg
 	 */
 	sendMessage: {
 		value: function($msg) {
-			if (this.type !== Connection.WEB_SOCKET) {
-				this.socket.write($msg);
+			if (this.type !== Connection.TYPE_WEB_SOCKET) {
+				this._socket.write($msg + "~~~");
 			} else {
-				var payload = new Buffer($msg, "utf8");
-				this.socket.write(this.__encodeMessage(payload));
+				var payload = new Buffer($msg + "~~~", "utf8");
+				this._socket.write(this.__encodeMessage(payload));
 			}
+		}
+	},
+
+	/**
+	 * Closes the socket for the connection
+	 * @method close
+	 */
+	close: {
+		value: function() {
+			throw new Error("Connection close method not yet implemented.");
+			//this._socket.close();
 		}
 	},
 
@@ -67,41 +128,49 @@ Connection.prototype = Object.create(EventEmitter.prototype, {
 	// ============================================================
 
 	/**
+	 * Connection initialization functionality.
 	 * @method __initialize
 	 * @private
 	 */
 	__initialize: {
 		value: function() {
+
+			if (_.isUndefined(this._socket)) {
+				Logger.error("No socket found. Could not initialize the connection object.");
+				return;
+			}
+
 			var delegate = this;
 
-			this.socket.on("data", function($buffer) {
-
+			this._socket.on("data", function($buffer) {
 				var data = String($buffer);
 				if (data.search("WebSocket") !== -1) {
-					delegate.type = Connection.WEB_SOCKET;
+					delegate.type = Connection.TYPE_WEB_SOCKET;
 					delegate.__completeWebSocketHandshake(data);
 				} else {
 					var buffer = $buffer;
 					// send out the content to all the clients
-					if (delegate.type === Connection.WEB_SOCKET) {
+					if (delegate.type === Connection.TYPE_WEB_SOCKET) {
 						buffer = delegate.__processWebSocketBuffer($buffer);
 					}
-					delegate.emit("data", buffer);
+					delegate.emit(Connection.EVENT_DATA, buffer);
 				}
 			});
 
-			this.socket.on("error", function(error) {
-				delegate.emit("error", error);
+			this._socket.on("error", function(error) {
+				delegate.emit(Connection.EVENT_ERROR, error);
 			});
 
 			// connection closed
-			this.socket.on("close", function(hadError) {
-				delegate.emit("close", hadError);
+			this._socket.on("close", function(hadError) {
+				delegate.emit(Connection.EVENT_CLOSE, hadError);
 			});
+
 		}
 	},
 
 	/**
+	 * Completion functionality for the web socket handshake sequence.
 	 * @method __completeWebSocketHandshake
 	 * @param {String} $data
 	 * @private
@@ -120,11 +189,12 @@ Connection.prototype = Object.create(EventEmitter.prototype, {
 				"Sec-WebSocket-Accept: " + hash + "\r\n" +
 				"\r\n";
 
-			this.socket.write(handshake);
+			this._socket.write(handshake);
 		}
 	},
 
 	/**
+	 * Encoding functionality for web socket messages.
 	 * @method __encodeMessage
 	 * @param {String} $msg
 	 * @private
@@ -175,6 +245,7 @@ Connection.prototype = Object.create(EventEmitter.prototype, {
 	},
 
 	/**
+	 * Processing functionality for web socket messages.
 	 * @method __processWebSocketBuffer
 	 * @param {Buffer} $buffer
 	 * @private
@@ -231,11 +302,13 @@ Connection.prototype = Object.create(EventEmitter.prototype, {
 			idx += 4;
 			var payload = buf.slice(idx, idx + length);
 			payload = this.__unmaskPayload(maskBytes, payload);
+
 			return payload;
 		}
 	},
 
 	/**
+	 * Unmasking functionality for web socket messages.
 	 * @method __unmaskPayload
 	 * @param {Array} $maskBytes
 	 * @param {String} $data
@@ -249,11 +322,72 @@ Connection.prototype = Object.create(EventEmitter.prototype, {
 			}
 			return payload;
 		}
+	},
+
+	/**
+	 * Frame handling functionality for web socket messages. Currently
+	 * only supports utf8 payloads.
+	 * @method __handleFrame
+	 * @param (Number} $opcode
+	 * @private
+	 */
+	__handleFrame: {
+		value: function($opcode, $buffer) {
+			var payload = $buffer.toString("utf8");
+			this.emit("data", $opcode, payload);
+		}
 	}
 });
 
-// counter for cids
-Connection.idCounter = 0;
+/**
+ * @property _cidCounter
+ * @for Connection
+ * @private
+ */
+Connection._cidCounter = 0;
 
-// mix in the connection constants
-_.extend(Connection, ConnectionConstants);
+// ============================================================
+// === Connection Constants ===================================
+// ============================================================
+
+/**
+ * @property TYPE_WEB_SOCKET
+ * @for Connection
+ * @static
+ */
+Connection.TYPE_WEB_SOCKET = "websocket";
+
+/**
+ * @property TYPE_SOCKET
+ * @for Connection
+ * @static
+ */
+Connection.TYPE_SOCKET = "socket";
+
+/**
+ * @property EVENT_ERROR
+ * @for Connection
+ * @static
+ */
+Connection.EVENT_ERROR = "errorEvent";
+
+/**
+ * @property EVENT_DATA
+ * @for Connection
+ * @static
+ */
+Connection.EVENT_DATA = "dataEvent";
+
+/**
+ * @property EVENT_CLOSE
+ * @for Connection
+ * @static
+ */
+Connection.EVENT_CLOSE = "closeEvent";
+
+/**
+ * @property EVENT_FLAGGED_FOR_REMOVAL
+ * @for Connection
+ * @static
+ */
+Connection.EVENT_FLAGGED_FOR_REMOVAL = "flaggedForRemovalEvent";

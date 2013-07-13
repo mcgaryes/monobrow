@@ -41,6 +41,8 @@
         <div id="api-tabview-panel">
             <ul id="api-classes" class="apis classes">
             
+                <li><a href="../classes/Client.html">Client</a></li>
+            
                 <li><a href="../classes/Connection.html">Connection</a></li>
             
                 <li><a href="../classes/ConnectionManager.html">ConnectionManager</a></li>
@@ -98,6 +100,7 @@ var Crypto = require(&quot;crypto&quot;);
 
 var Logger = require(&quot;./logger&quot;);
 var ConnectionConstants = require(&quot;./constants&quot;).ConnectionConstants;
+var OpCodes = require(&quot;./constants&quot;).WebSocketOpCodes;
 
 /**
  * @class Connection
@@ -105,12 +108,9 @@ var ConnectionConstants = require(&quot;./constants&quot;).ConnectionConstants;
  */
 var Connection = module.exports = function($options) {
 
-	this.cid = &quot;cid&quot; + Connection.idCounter++;
-
+	this.cid = &quot;cid&quot; + Connection._cidCounter++;
 	_.extend(this, $options);
-
 	this.__initialize();
-
 };
 
 Connection.prototype = Object.create(EventEmitter.prototype, {
@@ -124,7 +124,7 @@ Connection.prototype = Object.create(EventEmitter.prototype, {
 	 * @type String
 	 */
 	cid: {
-		value: null,
+		value: undefined,
 		writable: true
 	},
 
@@ -133,8 +133,28 @@ Connection.prototype = Object.create(EventEmitter.prototype, {
 	 * @type {net.Socket}
 	 */
 	socket: {
-		value: null,
+		value: undefined,
 		writable: true
+	},
+
+	/**
+	 * @property type
+	 * @type {String}
+	 * @default SOCKET
+	 */
+	type: {
+		value: Connection.TYPE_SOCKET,
+		writable: true
+	},
+
+	// ============================================================
+	// === Getters/Setters ========================================
+	// ============================================================
+
+	remotePort:{
+		get:function(){
+			return this.socket.remotePort;
+		}
 	},
 
 	// ============================================================
@@ -147,12 +167,25 @@ Connection.prototype = Object.create(EventEmitter.prototype, {
 	 */
 	sendMessage: {
 		value: function($msg) {
-			if (this.type !== Connection.WEB_SOCKET) {
-				this.socket.write($msg);
+			if (this.type !== Connection.TYPE_WEB_SOCKET) {
+				try {
+					this.socket.write($msg);
+				} catch (e) {
+					console.log(&quot;could not send message to client&quot;);
+				}
 			} else {
 				var payload = new Buffer($msg, &quot;utf8&quot;);
 				this.socket.write(this.__encodeMessage(payload));
 			}
+		}
+	},
+
+	/**
+	 *
+	 */
+	close: {
+		value: function() {
+			this.socket.close();
 		}
 	},
 
@@ -166,32 +199,39 @@ Connection.prototype = Object.create(EventEmitter.prototype, {
 	 */
 	__initialize: {
 		value: function() {
+
+			if(_.isUndefined(this.socket)){
+				Logger.error(&quot;No socket found. Could not initialize the connection object.&quot;);
+				return;
+			}
+
 			var delegate = this;
 
 			this.socket.on(&quot;data&quot;, function($buffer) {
-
 				var data = String($buffer);
 				if (data.search(&quot;WebSocket&quot;) !== -1) {
-					delegate.type = Connection.WEB_SOCKET;
+					delegate.type = Connection.TYPE_WEB_SOCKET;
 					delegate.__completeWebSocketHandshake(data);
 				} else {
 					var buffer = $buffer;
 					// send out the content to all the clients
-					if (delegate.type === Connection.WEB_SOCKET) {
+					if (delegate.type === Connection.TYPE_WEB_SOCKET) {
 						buffer = delegate.__processWebSocketBuffer($buffer);
 					}
-					delegate.emit(&quot;data&quot;, buffer);
+					delegate.emit(Connection.EVENT_DATA, buffer);
 				}
 			});
 
 			this.socket.on(&quot;error&quot;, function(error) {
-				delegate.emit(&quot;error&quot;, error);
+				console.log(&quot;socket error&quot;);
+				delegate.emit(Connection.EVENT_ERROR, error);
 			});
 
 			// connection closed
 			this.socket.on(&quot;close&quot;, function(hadError) {
-				delegate.emit(&quot;close&quot;, hadError);
+				delegate.emit(Connection.EVENT_CLOSE, hadError);
 			});
+
 		}
 	},
 
@@ -325,6 +365,7 @@ Connection.prototype = Object.create(EventEmitter.prototype, {
 			idx += 4;
 			var payload = buf.slice(idx, idx + length);
 			payload = this.__unmaskPayload(maskBytes, payload);
+
 			return payload;
 		}
 	},
@@ -343,14 +384,80 @@ Connection.prototype = Object.create(EventEmitter.prototype, {
 			}
 			return payload;
 		}
+	},
+
+	/**
+	 * @method __handleFrame
+	 * @param (Number} $opcode
+	 * @private
+	 */
+	__handleFrame: {
+		value: function($opcode, $buffer) {
+			var payload;
+			switch ($opcode) {
+				case OpCodes.TEXT:
+					payload = $buffer.toString(&quot;utf8&quot;);
+					this.emit(&quot;data&quot;, $opcode, payload);
+					break;
+				case OpCodes.BINARY:
+					payload = $buffer;
+					this.emit(&quot;data&quot;, $opcode, payload);
+					break;
+				case OpCodes.PING:
+					// Respond to pings with pongs
+					this._doSend(OpCodes.PONG, $buffer);
+					break;
+				case OpCodes.PONG:
+					// Ignore pongs
+					break;
+				case OpCodes.CLOSE:
+					// Parse close and reason
+					var code, reason;
+					if ($buffer.length &gt;= 2) {
+						code = $buffer.readUInt16BE(0);
+						reason = $buffer.toString(&quot;utf8&quot;, 2);
+					}
+					this.close(code, reason);
+					this.emit(&quot;close&quot;, code, reason);
+					break;
+				default:
+					this.close(1002, &quot;unknown opcode&quot;);
+			}
+		}
 	}
 });
 
-// counter for cids
-Connection.idCounter = 0;
+/**
+ * @property _cidCounter
+ * @for Connection
+ * @private
+ */
+Connection._cidCounter = 0;
 
-// mix in the connection constants
-_.extend(Connection, ConnectionConstants);
+/**
+ * @property WEB_SOCKET
+ * @for Connection
+ * @static
+ */
+Connection.TYPE_WEB_SOCKET = &quot;websocket&quot;;
+
+/**
+ * @property SOCKET
+ * @for Connection
+ * @static
+ */
+Connection.TYPE_SOCKET = &quot;socket&quot;;
+
+Connection.EVENT_ERROR = &quot;errorEvent&quot;;
+Connection.EVENT_DATA = &quot;dataEvent&quot;;
+Connection.EVENT_CLOSE = &quot;closeEvent&quot;;
+Connection.EVENT_FLAGGED_FOR_REMOVAL = &quot;flaggedForRemovalEvent&quot;;
+
+
+
+
+
+
     </pre>
 </div>
 

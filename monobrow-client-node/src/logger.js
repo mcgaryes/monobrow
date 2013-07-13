@@ -12,7 +12,9 @@ var fs = require('fs');
  * @private
  */
 var Logger = function(options) {
+
 	if (Logger.instance) {
+
 		return Logger.sharedInstance;
 	}
 	Logger.sharedInstance = this;
@@ -30,6 +32,7 @@ Object.defineProperties(Logger.prototype, {
 	 */
 	_timestamp: {
 		get: function() {
+
 			var date = new Date();
 			var y = date.getFullYear();
 			var mo = date.getMonth() > 10 ? date.getMonth() + 1 : "0" + (date.getMonth() + 1);
@@ -50,10 +53,8 @@ Object.defineProperties(Logger.prototype, {
 	 */
 	log: {
 		value: function(message) {
+
 			console.log(color(this._timestamp, "green") + " - " + message);
-			if (this._out) {
-				fs.appendFile(this._out, this._timestamp + " - " + message + "\n");
-			}
 		}
 	},
 
@@ -66,10 +67,8 @@ Object.defineProperties(Logger.prototype, {
 	 */
 	warn: {
 		value: function(warning) {
+
 			console.log(color(this._timestamp, "green") + " - " + color("Warning: ", "yellow+bold") + color(warning, "yellow"));
-			if (this._out) {
-				fs.appendFile(this._out, "Warning: " + this._timestamp + " - " + warning + "\n");
-			}
 		}
 	},
 
@@ -82,10 +81,8 @@ Object.defineProperties(Logger.prototype, {
 	 */
 	error: {
 		value: function(error) {
+
 			console.log(color(this._timestamp, "green") + " - " + color("Error: ", "red+bold") + color(error, "red"));
-			if (this._error) {
-				fs.appendFile(this._error, this._timestamp + " - " + error + "\n");
-			}
 		}
 	}
 });

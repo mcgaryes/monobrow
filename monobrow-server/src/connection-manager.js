@@ -1,9 +1,16 @@
+// ============================================================
+// === Imports ================================================
+// ============================================================
+
 var _ = require("underscore");
 var EventEmitter = require("events").EventEmitter;
 
 var Logger = require("./logger");
 var Connection = require("./connection");
-var ConnectionManagerConstants = require("./constants").ConnectionManagerConstants;
+
+// ============================================================
+// === Connection Manager =====================================
+// ============================================================
 
 /**
  * Manages connections for the socket server.
@@ -34,8 +41,8 @@ ConnectionManager.prototype = Object.create(EventEmitter.prototype, {
 			// if we'll allow the socket to connect or not
 			if (!this.__isConnectionAllowed(socket)) {
 				socket.error();
-				var remoteAddress = socket.remoteAddress + ":" + socket.remotePort;
-				Logger.error("Monobrow refused connection from " + remoteAddress);
+				var address = socket.remoteAddress + ":" + socket.remotePort;
+				Logger.error("Monobrow refused connection from " + address);
 				return;
 			}
 
@@ -50,16 +57,18 @@ ConnectionManager.prototype = Object.create(EventEmitter.prototype, {
 			this.__addConnection(connection);
 
 			// listen for data from emitter
-			connection.on("data", function($buffer) {
-				delegate.broadcast($buffer);
+			connection.on(Connection.EVENT_DATA, function($buffer) {
+				delegate.broadcast($buffer, [connection.cid]);
 			});
 
-			connection.on("error", function($e) {
-				Logger.error($e.toString());
+			// connection error
+			connection.on(Connection.EVENT_ERROR, function($e) {
+				Logger.error($e.toString() + " Removing connection...");
+				delegate.__removeConnection(connection);
 			});
 
 			// connection closed
-			connection.on("close", function($hadError) {
+			connection.on(Connection.EVENT_CLOSE, function($hadError) {
 				delegate.__removeConnection(connection);
 			});
 
@@ -116,23 +125,9 @@ ConnectionManager.prototype = Object.create(EventEmitter.prototype, {
 	__addConnection: {
 		value: function(connection) {
 
-			// assign and send message with cid to new connection
-			// connection.sendMessage({ type: "myidis", data: { cid: connection.cid } });*/
-
-			// broadcast that their has been a sibling added to the server
-			// that each connection is on
-			// this.broadcast(JSON.stringify({
-			// type: "clientAdded",
-			// data: JSON.stringify({
-			// total: this._connections.length,
-			// cid: connection.cid
-			// })
-			// }), [connection.cid]);
-
 			this._connections.push(connection);
-			Logger.log("Connection added. " + this._connections.length + " total connection(s).");
+			Logger.log("Connection '" + connection.cid + "' added. " + this._connections.length + " total connection(s).");
 			this.emit(ConnectionManager.CONNECTION_MADE, connection);
-
 		}
 	},
 
@@ -144,17 +139,12 @@ ConnectionManager.prototype = Object.create(EventEmitter.prototype, {
 	 */
 	__removeConnection: {
 		value: function(connection) {
+
 			this._connections = _.filter(this._connections, function(c, index) {
 				if (c.remotePort === connection.remotePort) {
-					Logger.log("Connection removed. " + (this._connections.length - 1) + " total connection(s) remaining.");
+
+					Logger.log("Connection '" + c.cid + "' with type '" + c.type + "' was removed. " + (this._connections.length - 1) + " total connection(s) remaining.");
 					this.emit(ConnectionManager.CONNECTION_LOST, connection);
-					this.broadcast({
-						type: "clientRemoved",
-						data: JSON.stringify({
-							total: this._connections.length - 1,
-							cid: connection.cid
-						})
-					}, [c.cid]);
 				}
 				return c.remotePort !== connection.remotePort;
 			}, this);
@@ -162,4 +152,20 @@ ConnectionManager.prototype = Object.create(EventEmitter.prototype, {
 	}
 });
 
-_.extend(ConnectionManager, ConnectionManagerConstants);
+// ============================================================
+// === Connection Manager Constants ===========================
+// ============================================================
+
+/**
+ * @property CONNECTION_MADE
+ * @for ConnectionManager
+ * @static
+ */
+ConnectionManager.EVENT_CONNECTION_MADE = "connectionMadeEvent";
+
+/**
+ * @property CONNECTION_LOST
+ * @for ConnectionManager
+ * @static
+ */
+ConnectionManager.EVENT_CONNECTION_LOST = "connectionLostEvent";

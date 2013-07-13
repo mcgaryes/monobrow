@@ -41,6 +41,8 @@
         <div id="api-tabview-panel">
             <ul id="api-classes" class="apis classes">
             
+                <li><a href="../classes/Client.html">Client</a></li>
+            
                 <li><a href="../classes/Connection.html">Connection</a></li>
             
                 <li><a href="../classes/ConnectionManager.html">ConnectionManager</a></li>
@@ -144,16 +146,18 @@ ConnectionManager.prototype = Object.create(EventEmitter.prototype, {
 			this.__addConnection(connection);
 
 			// listen for data from emitter
-			connection.on(&quot;data&quot;, function($buffer) {
-				delegate.broadcast($buffer);
+			connection.on(Connection.EVENT_DATA, function($buffer) {
+				delegate.broadcast($buffer,[connection.cid]);
 			});
 
-			connection.on(&quot;error&quot;, function($e) {
-				Logger.error($e.toString());
+			// connection error
+			connection.on(Connection.EVENT_ERROR, function($e) {
+				Logger.error($e.toString() + &quot; Removing connection...&quot;);
+				delegate.__removeConnection(connection);
 			});
 
 			// connection closed
-			connection.on(&quot;close&quot;, function($hadError) {
+			connection.on(Connection.EVENT_CLOSE, function($hadError) {
 				delegate.__removeConnection(connection);
 			});
 
@@ -213,18 +217,19 @@ ConnectionManager.prototype = Object.create(EventEmitter.prototype, {
 			// assign and send message with cid to new connection
 			// connection.sendMessage({ type: &quot;myidis&quot;, data: { cid: connection.cid } });*/
 
-			// broadcast that their has been a sibling added to the server
-			// that each connection is on
-			// this.broadcast(JSON.stringify({
-			// type: &quot;clientAdded&quot;,
-			// data: JSON.stringify({
-			// total: this._connections.length,
-			// cid: connection.cid
-			// })
-			// }), [connection.cid]);
+			// send out client added event
+			var buf = new Buffer(JSON.stringify({
+				type: &quot;clientAdded&quot;,
+				data: JSON.stringify({
+					total: this._connections.length,
+					cid: connection.cid
+				})
+			}));
+			this.broadcast(buf, [connection.cid]);
 
+			// ... and add the new connection so we can deal with it later
 			this._connections.push(connection);
-			Logger.log(&quot;Connection added. &quot; + this._connections.length + &quot; total connection(s).&quot;);
+			Logger.log(&quot;Connection &#x27;&quot; + connection.cid + &quot;&#x27; added. &quot; + this._connections.length + &quot; total connection(s).&quot;);
 			this.emit(ConnectionManager.CONNECTION_MADE, connection);
 
 		}
@@ -238,17 +243,22 @@ ConnectionManager.prototype = Object.create(EventEmitter.prototype, {
 	 */
 	__removeConnection: {
 		value: function(connection) {
+
 			this._connections = _.filter(this._connections, function(c, index) {
 				if (c.remotePort === connection.remotePort) {
-					Logger.log(&quot;Connection removed. &quot; + (this._connections.length - 1) + &quot; total connection(s) remaining.&quot;);
+
+					Logger.log(&quot;Connection &#x27;&quot; + c.cid + &quot;&#x27; with type &#x27;&quot; + c.type + &quot;&#x27; was removed. &quot; + (this._connections.length - 1) + &quot; total connection(s) remaining.&quot;);
 					this.emit(ConnectionManager.CONNECTION_LOST, connection);
-					this.broadcast({
+
+					// send out client removed event
+					var buf = new Buffer(JSON.stringify({
 						type: &quot;clientRemoved&quot;,
 						data: JSON.stringify({
 							total: this._connections.length - 1,
 							cid: connection.cid
 						})
-					}, [c.cid]);
+					}));
+					this.broadcast(buf, [c.cid]);
 				}
 				return c.remotePort !== connection.remotePort;
 			}, this);
@@ -256,7 +266,19 @@ ConnectionManager.prototype = Object.create(EventEmitter.prototype, {
 	}
 });
 
-_.extend(ConnectionManager, ConnectionManagerConstants);
+/**
+ * @property CONNECTION_MADE
+ * @for ConnectionManager
+ * @static
+ */
+ConnectionManager.EVENT_CONNECTION_MADE = &quot;connectionMadeEvent&quot;;
+
+/**
+ * @property CONNECTION_LOST
+ * @for ConnectionManager
+ * @static
+ */
+ConnectionManager.EVENT_CONNECTION_LOST = &quot;connectionLostEvent&quot;;
     </pre>
 </div>
 

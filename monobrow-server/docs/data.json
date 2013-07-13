@@ -12,7 +12,9 @@
             "classes": {
                 "ConnectionManager": 1
             },
-            "fors": {},
+            "fors": {
+                "ConnectionManager": 1
+            },
             "namespaces": {}
         },
         "../src/connection.js": {
@@ -21,7 +23,9 @@
             "classes": {
                 "Connection": 1
             },
-            "fors": {},
+            "fors": {
+                "Connection": 1
+            },
             "namespaces": {}
         },
         "../src/constants.js": {
@@ -30,8 +34,7 @@
             "classes": {},
             "fors": {
                 "Server": 1,
-                "ConnectionManager": 1,
-                "Connection": 1
+                "Client": 1
             },
             "namespaces": {}
         },
@@ -80,7 +83,7 @@
             "plugin_for": [],
             "extension_for": [],
             "file": "../src/connection.js",
-            "line": 8,
+            "line": 9,
             "is_constructor": 1
         },
         "Server": {
@@ -95,6 +98,15 @@
             "line": 10,
             "description": "Monobrow server constructor. The server handles the creation of a nodejs socket\nserver as well as as an instance of the monobrow connection manager.",
             "is_constructor": 1
+        },
+        "Client": {
+            "name": "Client",
+            "shortname": "Client",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": []
         },
         "Logger": {
             "name": "Logger",
@@ -128,7 +140,7 @@
         },
         {
             "file": "../src/connection-manager.js",
-            "line": 69,
+            "line": 71,
             "description": "Broadcasts a message to all connections.",
             "itemtype": "method",
             "name": "broadcast",
@@ -143,7 +155,7 @@
         },
         {
             "file": "../src/connection-manager.js",
-            "line": 95,
+            "line": 97,
             "description": "Checks to see if the connection should be allowed\nor not. This is based on whitelisted domains and IP\naddresses in the server config.",
             "itemtype": "method",
             "name": "__isConnectionAllowed",
@@ -163,7 +175,7 @@
         },
         {
             "file": "../src/connection-manager.js",
-            "line": 110,
+            "line": 112,
             "description": "Adds a connection from the manager.",
             "itemtype": "method",
             "name": "__addConnection",
@@ -180,7 +192,7 @@
         },
         {
             "file": "../src/connection-manager.js",
-            "line": 139,
+            "line": 142,
             "description": "Removes a connection from the manager.",
             "itemtype": "method",
             "name": "__removeConnection",
@@ -196,8 +208,24 @@
             "class": "ConnectionManager"
         },
         {
+            "file": "../src/connection-manager.js",
+            "line": 173,
+            "itemtype": "property",
+            "name": "CONNECTION_MADE",
+            "static": 1,
+            "class": "ConnectionManager"
+        },
+        {
+            "file": "../src/connection-manager.js",
+            "line": 180,
+            "itemtype": "property",
+            "name": "CONNECTION_LOST",
+            "static": 1,
+            "class": "ConnectionManager"
+        },
+        {
             "file": "../src/connection.js",
-            "line": 28,
+            "line": 26,
             "itemtype": "property",
             "name": "cid",
             "type": "String",
@@ -205,7 +233,7 @@
         },
         {
             "file": "../src/connection.js",
-            "line": 37,
+            "line": 35,
             "itemtype": "property",
             "name": "socket",
             "type": "{net.Socket}",
@@ -213,7 +241,16 @@
         },
         {
             "file": "../src/connection.js",
-            "line": 50,
+            "line": 44,
+            "itemtype": "property",
+            "name": "type",
+            "type": "{String}",
+            "default": "SOCKET",
+            "class": "Connection"
+        },
+        {
+            "file": "../src/connection.js",
+            "line": 68,
             "itemtype": "method",
             "name": "sendMessage",
             "params": [
@@ -227,7 +264,12 @@
         },
         {
             "file": "../src/connection.js",
-            "line": 69,
+            "line": 87,
+            "class": "Connection"
+        },
+        {
+            "file": "../src/connection.js",
+            "line": 100,
             "itemtype": "method",
             "name": "__initialize",
             "access": "private",
@@ -236,7 +278,7 @@
         },
         {
             "file": "../src/connection.js",
-            "line": 104,
+            "line": 142,
             "itemtype": "method",
             "name": "__completeWebSocketHandshake",
             "params": [
@@ -252,7 +294,7 @@
         },
         {
             "file": "../src/connection.js",
-            "line": 127,
+            "line": 165,
             "itemtype": "method",
             "name": "__encodeMessage",
             "params": [
@@ -268,7 +310,7 @@
         },
         {
             "file": "../src/connection.js",
-            "line": 177,
+            "line": 215,
             "itemtype": "method",
             "name": "__processWebSocketBuffer",
             "params": [
@@ -284,7 +326,7 @@
         },
         {
             "file": "../src/connection.js",
-            "line": 238,
+            "line": 277,
             "itemtype": "method",
             "name": "__unmaskPayload",
             "params": [
@@ -304,8 +346,48 @@
             "class": "Connection"
         },
         {
+            "file": "../src/connection.js",
+            "line": 293,
+            "itemtype": "method",
+            "name": "__handleFrame",
+            "params": [
+                {
+                    "name": "(Number}",
+                    "description": "$opcode"
+                }
+            ],
+            "access": "private",
+            "tagname": "",
+            "class": "Connection"
+        },
+        {
+            "file": "../src/connection.js",
+            "line": 334,
+            "itemtype": "property",
+            "name": "_cidCounter",
+            "access": "private",
+            "tagname": "",
+            "class": "Connection"
+        },
+        {
+            "file": "../src/connection.js",
+            "line": 341,
+            "itemtype": "property",
+            "name": "WEB_SOCKET",
+            "static": 1,
+            "class": "Connection"
+        },
+        {
+            "file": "../src/connection.js",
+            "line": 348,
+            "itemtype": "property",
+            "name": "SOCKET",
+            "static": 1,
+            "class": "Connection"
+        },
+        {
             "file": "../src/constants.js",
-            "line": 5,
+            "line": 2,
             "itemtype": "property",
             "name": "INITIALIZED",
             "static": 1,
@@ -313,7 +395,7 @@
         },
         {
             "file": "../src/constants.js",
-            "line": 12,
+            "line": 9,
             "itemtype": "property",
             "name": "RUNNING",
             "static": 1,
@@ -321,7 +403,7 @@
         },
         {
             "file": "../src/constants.js",
-            "line": 19,
+            "line": 16,
             "itemtype": "property",
             "name": "STOPPED",
             "static": 1,
@@ -329,7 +411,7 @@
         },
         {
             "file": "../src/constants.js",
-            "line": 26,
+            "line": 23,
             "itemtype": "property",
             "name": "STATE_CHANGE",
             "static": 1,
@@ -337,7 +419,7 @@
         },
         {
             "file": "../src/constants.js",
-            "line": 33,
+            "line": 30,
             "itemtype": "property",
             "name": "CLIENT_DID_CONNECT",
             "static": 1,
@@ -345,7 +427,7 @@
         },
         {
             "file": "../src/constants.js",
-            "line": 40,
+            "line": 37,
             "itemtype": "property",
             "name": "CLIENT_DID_DISCONNECT",
             "static": 1,
@@ -353,35 +435,112 @@
         },
         {
             "file": "../src/constants.js",
-            "line": 50,
+            "line": 46,
+            "description": "Normal closure; the connection successfully completed whatever purpose for which it was created.",
             "itemtype": "property",
-            "name": "CONNECTION_MADE",
+            "name": "",
+            "type": "Number",
             "static": 1,
-            "class": "ConnectionManager"
+            "access": "private",
+            "tagname": "",
+            "class": "Client"
         },
         {
             "file": "../src/constants.js",
-            "line": 57,
+            "line": 56,
+            "description": "The endpoint is going away, either because of a server failure or because the browser is\nnavigating away from the page that opened the connection.",
             "itemtype": "property",
-            "name": "CONNECTION_LOST",
+            "name": "",
+            "type": "Number",
             "static": 1,
-            "class": "ConnectionManager"
+            "access": "private",
+            "tagname": "",
+            "class": "Client"
         },
         {
             "file": "../src/constants.js",
             "line": 67,
+            "description": "The endpoint is terminating the connection due to a protocol error.",
             "itemtype": "property",
-            "name": "WEB_SOCKET",
+            "name": "",
+            "type": "Number",
             "static": 1,
-            "class": "Connection"
+            "access": "private",
+            "tagname": "",
+            "class": "Client"
         },
         {
             "file": "../src/constants.js",
-            "line": 74,
+            "line": 77,
+            "description": "The connection is being terminated because the endpoint received data of a type it\n cannot accept (for example, a text-only endpoint received binary data).",
             "itemtype": "property",
-            "name": "SOCKET",
+            "name": "",
+            "type": "Number",
             "static": 1,
-            "class": "Connection"
+            "access": "private",
+            "tagname": "",
+            "class": "Client"
+        },
+        {
+            "file": "../src/constants.js",
+            "line": 88,
+            "description": "The endpoint is terminating the connection because a data frame was received that is too large.",
+            "itemtype": "property",
+            "name": "",
+            "type": "Number",
+            "static": 1,
+            "access": "private",
+            "tagname": "",
+            "class": "Client"
+        },
+        {
+            "file": "../src/constants.js",
+            "line": 98,
+            "description": "Reserved.  Indicates that no status code was provided even though one was expected.",
+            "itemtype": "property",
+            "name": "",
+            "type": "Number",
+            "static": 1,
+            "access": "private",
+            "tagname": "",
+            "class": "Client"
+        },
+        {
+            "file": "../src/constants.js",
+            "line": 108,
+            "description": "Normal closure; the connection successfully completed whatever purpose for which it was created.",
+            "itemtype": "property",
+            "name": "",
+            "type": "Number",
+            "static": 1,
+            "access": "private",
+            "tagname": "",
+            "class": "Client"
+        },
+        {
+            "file": "../src/constants.js",
+            "line": 120,
+            "class": "Client"
+        },
+        {
+            "file": "../src/constants.js",
+            "line": 125,
+            "class": "Client"
+        },
+        {
+            "file": "../src/constants.js",
+            "line": 130,
+            "class": "Client"
+        },
+        {
+            "file": "../src/constants.js",
+            "line": 135,
+            "class": "Client"
+        },
+        {
+            "file": "../src/constants.js",
+            "line": 140,
+            "class": "Client"
         },
         {
             "file": "../src/logger.js",
@@ -475,5 +634,30 @@
             "class": "Server"
         }
     ],
-    "warnings": []
+    "warnings": [
+        {
+            "message": "Missing item type",
+            "line": " ../src/connection.js:87"
+        },
+        {
+            "message": "Missing item type",
+            "line": " ../src/constants.js:120"
+        },
+        {
+            "message": "Missing item type",
+            "line": " ../src/constants.js:125"
+        },
+        {
+            "message": "Missing item type",
+            "line": " ../src/constants.js:130"
+        },
+        {
+            "message": "Missing item type",
+            "line": " ../src/constants.js:135"
+        },
+        {
+            "message": "Missing item type",
+            "line": " ../src/constants.js:140"
+        }
+    ]
 }

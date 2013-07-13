@@ -16,14 +16,6 @@ module.exports = function(grunt) {
                 jshintrc: '../.jshintrc'
             }
         },
-        jasmine: {
-            all: {
-                options: {
-                    specs: '../tests/specs/*.js',
-                    template: '../tests/custom.tmpl'
-                }
-            }
-        },
         yuidoc: {
             all: {
                 name: NAME,
@@ -35,14 +27,20 @@ module.exports = function(grunt) {
                     outdir: '../docs/'
                 }
             }
+        },
+        jasmine_node: {
+            all:{
+                specFolders:"../tests/specs"
+            }
         }
     });
 
     // load npm tasks
     grunt.loadNpmTasks('grunt-contrib-yuidoc');
     grunt.loadNpmTasks('grunt-contrib-jshint');
-    grunt.loadNpmTasks('grunt-contrib-jasmine');
+    grunt.loadNpmTasks('grunt-jasmine-node');
 
     // tasks
-    grunt.registerTask('default', ['jshint', /*'jasmine',*/ "yuidoc"]);
+    grunt.registerTask("default", ["jshint", "jasmine_node"]);
+    grunt.registerTask("release", ["default", "yuidoc"]);
 };

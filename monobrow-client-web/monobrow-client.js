@@ -67,22 +67,17 @@
 		 * @param {String} type
 		 * @param {Function} callback
 		 * @param {Object} context
-		 * @param {Boolean} configurable Whether or not you should be able to remove this listener without passing its callback reference
 		 */
-		on: function(type, callback, context, configurable) {
+		on: function(type, callback, context) {
 			if (this._eventMap === undefined) {
 				this._eventMap = {};
 			}
 			if (this._eventMap[type] === undefined) {
 				this._eventMap[type] = [];
 			}
-			if (configurable === undefined) {
-				configurable = true;
-			}
 			this._eventMap[type].push({
 				callback: callback,
-				context: context,
-				configurable: configurable
+				context: context
 			});
 		},
 
@@ -92,18 +87,14 @@
 		 * @param {String} type
 		 * @param {Function} callback
 		 */
-		trigger: function(type) {
+		trigger: function(type, data) {
 			if (!this.has(type)) {
 				return;
 			}
 			for (var i = 0; i < this._eventMap[type].length; i++) {
 				var item = this._eventMap[type][i];
 				if (item.callback !== null) {
-					item.callback.call(item.context, {
-						type: type,
-						target: this,
-						isConfigurable: item.configurable
-					});
+					item.callback.call(item.context, data);
 				}
 			}
 		}
@@ -118,23 +109,17 @@
 	 */
 	var Constants = {
 
+		// ============================================================
+		// === Client Events ==========================================
+		// ============================================================
+
 		/**
 		 * State change event fired on a state change of the client.
 		 * @property STATE_CHANGE_EVENT
 		 * @type String
 		 * @static
 		 */
-		STATE_CHANGE_EVENT: "stateChangeEvent",
-
-		/**
-		 * The data event is fired when incoming data is recognized. The data
-		 * passed is the raw buffer. Call toString on the data to get the string
-		 * representation of the data.
-		 * @property DATA_EVENT
-		 * @type String
-		 * @static
-		 */
-		DATA_EVENT: "dataEvent",
+		EVENT_STATE_CHANGE: "stateChangeEvent",
 
 		/**
 		 * A connection was just ADDED to the same server this client is
@@ -143,7 +128,7 @@
 		 * @type String
 		 * @static
 		 */
-		SIBLING_ADDED_EVENT: "siblingAddedEvent",
+		EVENT_SIBLING_ADDED: "siblingAddedEvent",
 
 		/**
 		 * A connection was just REMOVED to the same server this client is
@@ -152,7 +137,11 @@
 		 * @type String
 		 * @static
 		 */
-		SIBLING_REMOVED_EVENT: "siblingRemovedEvent",
+		EVENT_SIBLING_REMOVED: "siblingRemovedEvent",
+
+		// ============================================================
+		// === Client States ==========================================
+		// ============================================================
 
 		/**
 		 * The client is connected to the remote socket server.
@@ -185,6 +174,7 @@
 		 * @static
 		 */
 		STATE_ERROR: "error"
+
 	};
 
 	// ============================================================
@@ -286,6 +276,21 @@
 				socket.onclose = function(e) {
 					delegate.__handleSocketClose(e);
 				};
+			}
+		},
+
+		/**
+		 *
+		 */
+		disconnect: {
+			value: function($code, $reason) {
+				throw new Error("Manual Disconnect Not Yet Implememnted");
+				/*
+				this._socket.close(1000,"Just because");
+				this._previousState = this._state;
+				this._state = MonobrowClient.STATE_DISCONNECTED;
+				this.trigger(MonobrowClient.STATE_CHANGE, this._state, this._previousState);
+				*/
 			}
 		},
 
@@ -456,10 +461,12 @@
 		 */
 		__handleSocketClose: {
 			value: function(e) {
-				this._previousState = this._state;
-				console.log("MonobrowClient disconnected from " + this.address + ".");
-				this._state = MonobrowClient.STATE_DISCONNECTED;
-				this.trigger(MonobrowClient.STATE_CHANGE, this._state, this._previousState);
+				if (this._socket.readyState === 1) {
+					this._previousState = this._state;
+					console.log("MonobrowClient disconnected from " + this.address + ".");
+					this._state = MonobrowClient.STATE_DISCONNECTED;
+					this.trigger(MonobrowClient.STATE_CHANGE, this._state, this._previousState);
+				}
 			}
 		}
 	});
