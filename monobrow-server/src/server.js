@@ -122,21 +122,21 @@ Server.prototype = Object.create(EventEmitter.prototype, {
  * @for Server
  * @static
  */
-Server.INITIALIZED = 0;
+Server.INITIALIZED = "initialized";
 
 /**
  * @property RUNNING
  * @for Server
  * @static
  */
-Server.RUNNING = 1;
+Server.RUNNING = "running";
 
 /**
  * @property STOPPED
  * @for Server
  * @static
  */
-Server.STOPPED = 2;
+Server.STOPPED = "stopped";
 
 /**
  * @property STATE_CHANGE

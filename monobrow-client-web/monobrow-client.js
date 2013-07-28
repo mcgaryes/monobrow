@@ -389,14 +389,8 @@
 				try {
 
 					// need to handle multiple messages that may be attached to the same write
-					var clean = String(e.data).replace(/\s+/gi, '');
-					var types = clean.match(/\"type\":/g);
-					var messages = [];
-					if (types && types.length > 1) {
-						messages = clean.match(/\{(.*?)"}/g);
-					} else {
-						messages.push(clean);
-					}
+					var clean = String($data).replace(/\s+/gi, '');
+					var messages = clean.split("~~~");
 
 					// itterate through all of the messages and emit the appropriate event
 					for (var i = 0; i < messages.length; i++) {

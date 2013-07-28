@@ -5,7 +5,7 @@ module.exports = function(grunt) {
     var NAME = 'Monobrow-Node-Client';
     var DESCRIPTION = 'Monobrow-Node-Client';
     var URL = 'https://github.com/mcgaryes/monobrow';
-    var VERSION = '0.1.0';
+    var VERSION = '0.8.0';
     var BANNER = '/**\n * ' + NAME + ' v' + VERSION + '\n * ' + DESCRIPTION + '\n * ' + URL + '\n */\n';
 
     // config

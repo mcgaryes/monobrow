@@ -1,10 +1,23 @@
 {
-  "name": "monobrow",
-  "version": "0.1.0",
-  "description": "monobrow",
-  "private": true,
-  "dependencies": {
-    "underscore": "1.x.x",
-    "ansi-color": "0.2.1"
-  }
+	"name": "monobrow-server",
+	"version": "0.8.0",
+	"description": "Node socket server wrapper.",
+	"main": "monobrow.js",
+	"dependencies": {
+		"underscore": "1.x.x",
+		"ansi-color": "0.2.1"
+	},
+	"homepage": "https://github.com/mcgaryes/monobrow/",
+	"bugs": {
+		"url": "https://github.com/mcgaryes/monobrow/issues"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/mcgaryes/monobrow/"
+	},
+	"licenses": [{
+		"type": "MIT",
+		"url": "https://github.com/mcgaryes/monobrow/master/LICENSE"
+	}],
+	"keywords": ["tcp", "socket"]
 }
