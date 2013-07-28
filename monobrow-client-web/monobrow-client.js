@@ -395,47 +395,44 @@
 					// itterate through all of the messages and emit the appropriate event
 					for (var i = 0; i < messages.length; i++) {
 
-						var data = JSON.parse(messages[i]);
-						//console.log(data);
-						var type;
-						var body;
-						var pBody;
-
-						if (data.hasOwnProperty("type")) {
-							// assign the data type to the event
-							type = data.type;
+						if (messages[i] === "") {
+							// this is an empty message that we will not use
+							return;
 						}
 
-						if (data.hasOwnProperty("data")) {
+						var message = JSON.parse(messages[i]);
+						var type;
+						var body;
+
+						if (message.hasOwnProperty("type")) {
+
+							// assign the data type to the event
+							type = message.type;
+						}
+
+						if (message.hasOwnProperty("data")) {
+
 							// if the incoming data has a data attribute assign it to our body property
-							body = data.data;
-							pBody = JSON.parse(body);
+							body = message.data;
 						}
 
 						if (type) {
-							if (type === "myidis") {
-								this.cid = pBody.cid;
-							} else if (type === "clientAdded") {
-								this._totalSiblings = pBody.total;
-								this.trigger(MonobrowClient.SIBLING_ADDED_EVENT, pBody.cid);
-							} else if (type === "clientRemoved") {
-								this._totalSiblings = pBody.total;
-								this.trigger(MonobrowClient.SIBLING_REMOVED_EVENT, pBody.cid);
+
+							if (body) {
+
+								// emit the message with both a type and body
+								this.trigger(type, body);
 							} else {
-								if (body) {
-									// emit the message with both a type and body
-									//console.log("triggering " + type);
-									//console.log("with data " + body);
-									this.trigger(type, body);
-								} else {
-									// emit the message with only a type, so essential the body is
-									// null (in some clients) or undefined
-									this.trigger(type);
-								}
+
+								// emit the message with only a type, so essential the body is
+								// null (in some clients) or undefined
+								this.trigger(type);
 							}
+
 						} else {
+
 							// if we didnt have a type then we're simply going to log the issue
-							console.error("Could not process incoming data, it doesn't appear to have a 'type'.");
+							Logger.error("Could not process incoming data, it doesn't appear to have a 'type'.");
 						}
 					}
 				} catch (error) {
