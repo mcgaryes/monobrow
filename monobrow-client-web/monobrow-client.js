@@ -389,8 +389,7 @@
 				try {
 
 					// need to handle multiple messages that may be attached to the same write
-					var clean = String($data).replace(/\s+/gi, '');
-					var messages = clean.split("~~~");
+					var messages = String($data).split("~~~");
 
 					// itterate through all of the messages and emit the appropriate event
 					for (var i = 0; i < messages.length; i++) {

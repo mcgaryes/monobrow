@@ -9,7 +9,6 @@ package monobrow
 	import flash.net.Socket;
 	
 	import monobrow.events.MBBroadcastEvent;
-	import monobrow.events.MBSiblingEvent;
 	import monobrow.events.MBStateChangeEvent;
 
 	/**
@@ -17,8 +16,6 @@ package monobrow
 	 * @author emcgary
 	 */	
 	[Event(name="stateChangeEvent", type="monobrow.events.MBStateChangeEvent")]
-	[Event(name="siblingAdded", type="monobrow.events.MBSiblingEvent")]
-	[Event(name="siblingRemoved", type="monobrow.events.MBSiblingEvent")]
 	public class Client extends EventDispatcher
 	{
 
@@ -103,14 +100,6 @@ package monobrow
 		 * @private
 		 */
 		private var _cid:String;
-		
-		/**
-		 * The total number of siblings that this client has. A sibling is essentially
-		 * any other socket connected to this socket's server at the same time.
-		 * @default 0
-		 * @private
-		 */
-		private var _totalSiblings:int = 0;
 
 		// ============================================================
 		// === Initialization =========================================
@@ -135,7 +124,7 @@ package monobrow
 			_socket.addEventListener(Event.CONNECT, __handleSocketConnect);
 			_socket.addEventListener(Event.CLOSE, __handleSocketClose);
 			_socket.addEventListener(IOErrorEvent.IO_ERROR, __handleSocketError);
-			//_socket.addEventListener(ProgressEvent.SOCKET_DATA, __handleSocketData);
+			_socket.addEventListener(ProgressEvent.SOCKET_DATA, __handleSocketData);
 			_socket.addEventListener(SecurityErrorEvent.SECURITY_ERROR, __handleSecurityError);
 		}
 		
@@ -200,7 +189,7 @@ package monobrow
 			{
 				var message:String = JSON.stringify({
 					type:$type,
-					data:JSON.stringify($data)
+					data:$data
 				});
 				_socket.writeUTFBytes(message);	
 				_socket.flush();
@@ -243,15 +232,6 @@ package monobrow
 		public function get state():String
 		{
 			return _state;
-		}
-		
-		/**
-		 * The total number of siblings this client has.
-		 * @return  
-		 */		
-		public function get totalSiblings():int
-		{
-			return _totalSiblings;
 		}
 		
 		// ============================================================
@@ -313,78 +293,38 @@ package monobrow
 		 */		
 		private function __handleSocketData($e:ProgressEvent=null):void
 		{
-			/*
-			var json:String = _socket.readUTFBytes(_socket.bytesAvailable);						
-			var clean:String = json.replace(/\s+/gi, "");
-			var totalMessages:int = clean.match(/type/g).length;
-			var messages:Array = [];
-			if (totalMessages > 1) 
-			{
-				messages = clean.match(/\{(.*?)"\}/g);
-			} 
-			else 
-			{
-				messages.push(clean);
-			}
+			var json:String = _socket.readUTFBytes(_socket.bytesAvailable);	
+			//var clean:String = json.replace(/\s+/gi, '');
+			var messages:Array = json.split("~~~");
 			
 			// itterate through all of the messages and emit the appropriate event
 			for (var i:int = 0; i < messages.length; i++) 
 			{
 				
-				try
-				{
-					var data:Object=JSON.parse(messages[i]);
-				} 
-				catch (e:Error)
-				{
-					trace("Monobrow Error: " + e.message);
-					trace(messages[i]);
+				if (messages[i] == "") {
+					// this is an empty message that we will not use
 					return;
 				}
 				
+				var message:Object=JSON.parse(messages[i]); 
 				var type:String;
 				var body:Object;
-				var pBody:Object;
 				
 				// assign type and body
-				if(data.hasOwnProperty("type")) type = data.type;
-				if(data.hasOwnProperty("data")) 
-				{
-					body = data.data;
-					pBody = JSON.parse(String(body)); 
-				}
+				if(message.hasOwnProperty("type")) type = message.type;
+				if(message.hasOwnProperty("data")) body = message.data;
 				
 				if(type)
 				{
-					// handle all of the reserved events 
-					if(type == CONNECTION_CID)
-					{
-						_cid = pBody.cid;
-					} 
-					else if(type==CLIENT_ADDED)
-					{
-						// subtract ourselves (this client instance) from the count
-						_totalSiblings = pBody.total - 1;
-						dispatchEvent(new MBSiblingEvent(MBSiblingEvent.SIBLING_ADDED,pBody.cid));
-					}
-					else if(type==CLIENT_REMOVED)
-					{
-						// subtract ourselves (this client instance) from the count
-						_totalSiblings = pBody.total - 1;
-						dispatchEvent(new MBSiblingEvent(MBSiblingEvent.SIBLING_REMOVED,pBody.cid));							
-					}
-					else 
-					{
-						// send a generic broadcast event for types that we dont know about
-						dispatchEvent(new MBBroadcastEvent(type,pBody));
-					}
+					// send a generic broadcast event for types that we dont know about
+					dispatchEvent(new MBBroadcastEvent(type,body));
 				}
 				else
 				{
 					trace("could not process incoming data");
 				}
 			}
-			*/
+			
 		}
 	}
 }

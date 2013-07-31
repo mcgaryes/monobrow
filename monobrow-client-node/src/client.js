@@ -241,11 +241,10 @@ Client.prototype = Object.create(EventEmitter.prototype, {
     __handleSocketData: {
         value: function($data) {
 
-            //try {
+            try {
 
                 // need to handle multiple messages that may be attached to the same write
-                var clean = String($data).replace(/\s+/gi, '');
-                var messages = clean.split("~~~");
+                var messages = String($data).split("~~~");
 
                 // itterate through all of the messages and emit the appropriate event
                 for (var i = 0; i < messages.length; i++) {
@@ -290,11 +289,10 @@ Client.prototype = Object.create(EventEmitter.prototype, {
                         Logger.error("Could not process incoming data, it doesn't appear to have a 'type'.");
                     }
                 }
-            //} catch (e) {
-
+            } catch (e) {
                 // if we couldnt perform any of the above functionality the report the error incurred
-              //  Logger.error(e.message);
-            //}
+                Logger.error(e.message);
+            }
         }
     },
 
