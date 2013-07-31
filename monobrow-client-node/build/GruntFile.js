@@ -5,7 +5,7 @@ module.exports = function(grunt) {
     var NAME = 'Monobrow-Node-Client';
     var DESCRIPTION = 'Monobrow-Node-Client';
     var URL = 'https://github.com/mcgaryes/monobrow';
-    var VERSION = '0.8.0';
+    var VERSION = '0.8.1';
     var BANNER = '/**\n * ' + NAME + ' v' + VERSION + '\n * ' + DESCRIPTION + '\n * ' + URL + '\n */\n';
 
     // config
@@ -42,6 +42,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-yuidoc');
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-jasmine');
+
 
     // tasks
     grunt.registerTask('default', ['jshint', /*'jasmine',*/ "yuidoc"]);

@@ -1,6 +1,6 @@
 {
 	"name": "monobrow-client",
-	"version": "0.8.0",
+	"version": "0.8.1",
 	"description": "monobrow-server client",
 	"dependencies": {
 		"underscore": "1.x.x",

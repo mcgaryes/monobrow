@@ -19,7 +19,7 @@
             
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 0.1.0</em>
+            <em>API Docs for: 0.8.1</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -93,7 +93,6 @@ var EventEmitter = require(&quot;events&quot;).EventEmitter;
 var net = require(&#x27;net&#x27;);
 var Logger = require(&quot;./logger&quot;);
 var Util = require(&quot;util&quot;);
-var Constants = require(&quot;./constants&quot;);
 
 /**
  * Client for connecting to a Monobrow server.
@@ -107,7 +106,6 @@ var Client = module.exports = function(options) {
 
     // extend our instance with the passed options
     _.extend(this, options);
-
 };
 
 Client.prototype = Object.create(EventEmitter.prototype, {
@@ -123,6 +121,7 @@ Client.prototype = Object.create(EventEmitter.prototype, {
      */
     state: {
         get: function() {
+
             return this._state;
         }
     },
@@ -134,6 +133,7 @@ Client.prototype = Object.create(EventEmitter.prototype, {
      */
     previousState: {
         get: function() {
+
             return this._previousState;
         }
     },
@@ -148,28 +148,16 @@ Client.prototype = Object.create(EventEmitter.prototype, {
 
             var host = this.host;
             if (_.isUndefined(host)) {
+
                 host = &quot;localhost&quot;;
             }
 
             if (_.isUndefined(this.port)) {
+
                 return host;
             }
 
             return host + &quot;:&quot; + this.port;
-        }
-    },
-
-    /**
-     * The total number of siblings a client has. A sibling is considered any
-     * connection that sits beside this client on the server (so another connection
-     * to the same server).
-     * @property totalSiblings
-     * @type Number
-     */
-    totalSiblings: {
-        get: function() {
-            // subtract ourselves from the total
-            return this._totalSiblings - 1;
         }
     },
 
@@ -183,17 +171,17 @@ Client.prototype = Object.create(EventEmitter.prototype, {
      */
     connect: {
         value: function() {
-            if (this._state !== Client.STATE_CONNECTED) {
+            if (this._state !== Client.CONNECTED) {
+
                 if (_.isUndefined(this.port) &amp;&amp; _.isUndefined(this.host)) {
+
                     Logger.error(&quot;Client must specify at least a port&quot;);
                 } else {
-                    //  if (_.isUndefined(this.port)) {
-                    //  this._socket.connect();
-                    // } else {
 
                     this._socket.connect(this.port, this.host);
                 }
             } else {
+
                 Logger.warn(&quot;Client is already connected to the server.&quot;);
             }
         }
@@ -205,7 +193,8 @@ Client.prototype = Object.create(EventEmitter.prototype, {
      */
     disconnect: {
         value: function() {
-            if (this._state === Client.STATE_CONNECTED) {
+            if (this._state === Client.CONNECTED) {
+
                 throw &quot;Disconnect not yet implemented.&quot;;
             }
         }
@@ -217,26 +206,28 @@ Client.prototype = Object.create(EventEmitter.prototype, {
      * @param {String} type The type of event being triggered
      * @param {Object} data *Optional* - The data you want to pass as the body of the event
      */
-    trigger: {
+    sendMessage: {
         value: function(type, data) {
-            if (this._state === Client.STATE_CONNECTED) {
+            if (this._state === Client.CONNECTED) {
+
                 if (!_.isUndefined(type)) {
+
                     if (_.isString(type)) {
-                        try {
-                            this._socket.write(JSON.stringify({
-                                type: type,
-                                data: JSON.stringify(data)
-                            }));
-                        } catch (e) {
-                            Logger.error(e.message);
-                        }
+
+                        this._socket.write(JSON.stringify({
+                            type: type,
+                            data: data
+                        }));
                     } else {
+
                         Logger.warn(&quot;Message not sent. Type must be a string.&quot;);
                     }
                 } else {
+
                     Logger.warn(&quot;Message not sent. You must specify at least a type.&quot;);
                 }
             } else {
+
                 Logger.warn(&quot;Message not sent. Client must be connected to emit a message.&quot;);
             }
         }
@@ -255,7 +246,7 @@ Client.prototype = Object.create(EventEmitter.prototype, {
     __initialize: {
         value: function() {
 
-            this._state = Client.STATE_INITIALIZED;
+            this._state = Client.INITIALIZED;
 
             // create the socket server we&#x27;ll use to connect to the server with
             this._socket = net.Socket();
@@ -265,18 +256,22 @@ Client.prototype = Object.create(EventEmitter.prototype, {
 
             // add listeners for the socket instance
             this._socket.on(&quot;error&quot;, function(e) {
+
                 delegate.__handleSocketError(e);
             });
 
             this._socket.on(&quot;connect&quot;, function() {
+
                 delegate.__handleSocketConnect();
             });
 
             this._socket.on(&quot;data&quot;, function(data) {
+
                 delegate.__handleSocketData(data);
             });
 
             this._socket.on(&quot;close&quot;, function(hasError) {
+
                 delegate.__handleSocketClose(hasError);
             });
 
@@ -294,12 +289,16 @@ Client.prototype = Object.create(EventEmitter.prototype, {
     __handleSocketError: {
         value: function(e) {
             if (e.code === &quot;EADDRNOTAVAIL&quot;) {
+
                 Logger.error(&quot;Server not available at &quot; + this.address + &quot;.&quot;);
             } else if (e.code === &quot;ECONNREFUSED&quot;) {
+
                 Logger.error(&quot;The connection to &quot; + this.address + &quot; was refused.&quot;);
             } else if (e.code === &quot;ENOENT&quot;) {
+
                 Logger.error(&quot;Domain does not exist or lookup failure.&quot;);
             } else {
+
                 Logger.error(e.code);
             }
         }
@@ -312,9 +311,10 @@ Client.prototype = Object.create(EventEmitter.prototype, {
      */
     __handleSocketConnect: {
         value: function() {
+
             Logger.log(&quot;Client connected to &quot; + this.address + &quot;.&quot;);
             this._previousState = this._state;
-            this._state = Client.STATE_CONNECTED;
+            this._state = Client.CONNECTED;
             this.emit(Client.STATE_CHANGE, this._state, this._previousState);
         }
     },
@@ -333,61 +333,48 @@ Client.prototype = Object.create(EventEmitter.prototype, {
 
             try {
 
-                // test multiple message at once
-                // data = &#x27;{&quot;type&quot;:&quot;dataEvent&quot;,&quot;data&quot;:&quot;{}&quot;}{&quot;type&quot;:&quot;someothertype&quot;,&quot;data&quot;:&quot;{}&quot;}&#x27;;
-
-                // smart content data
-                //data = &#x27;{&quot;type&quot;:&quot;smartAnalysisDidUpdate&quot;,&quot;data&quot;:&quot;{\&quot;predominantGender\&quot;:0,\&quot;predominantEmotion\&quot;:1,\&quot;totalFaces\&quot;:2,\&quot;predominantAge\&quot;:0}&quot;}&#x27;;
-
                 // need to handle multiple messages that may be attached to the same write
-                var clean = String($data).replace(/\s+/gi, &#x27;&#x27;);
-                var types = clean.match(/\&quot;type\&quot;:/g);
-                var messages = [];
-                if (types &amp;&amp; types.length &gt; 1) {
-                    messages = clean.match(/\{(.*?)&quot;\}/g);
-                } else {
-                    messages.push(clean);
-                }
+                var messages = String($data).split(&quot;~~~&quot;);
 
                 // itterate through all of the messages and emit the appropriate event
                 for (var i = 0; i &lt; messages.length; i++) {
 
-                    var data = JSON.parse(messages[i]);
-                    var type;
-                    var body;
-                    var pBody;
-
-                    if (data.hasOwnProperty(&quot;type&quot;)) {
-                        // assign the data type to the event
-                        type = data.type;
+                    if (messages[i] === &quot;&quot;) {
+                        // this is an empty message that we will not use
+                        return;
                     }
 
-                    if (data.hasOwnProperty(&quot;data&quot;)) {
+                    var message = JSON.parse(messages[i]);
+                    var type;
+                    var body;
+
+                    if (message.hasOwnProperty(&quot;type&quot;)) {
+
+                        // assign the data type to the event
+                        type = message.type;
+                    }
+
+                    if (message.hasOwnProperty(&quot;data&quot;)) {
+
                         // if the incoming data has a data attribute assign it to our body property
-                        body = data.data;
-                        pBody = JSON.parse(body);
+                        body = message.data;
                     }
 
                     if (type) {
-                        if (type === &quot;myidis&quot;) {
-                            this.cid = pBody.cid;
-                        } else if (type === &quot;clientAdded&quot;) {
-                            this._totalSiblings = pBody.total;
-                            this.emit(Client.SIBLING_ADDED_EVENT, pBody.cid);
-                        } else if (type === &quot;clientRemoved&quot;) {
-                            this._totalSiblings = pBody.total;
-                            this.emit(Client.SIBLING_REMOVED_EVENT, pBody.cid);
+
+                        if (body) {
+
+                            // emit the message with both a type and body
+                            this.emit(type, body);
                         } else {
-                            if (body) {
-                                // emit the message with both a type and body
-                                this.emit(type, body);
-                            } else {
-                                // emit the message with only a type, so essential the body is
-                                // null (in some clients) or undefined
-                                this.emit(type);
-                            }
+
+                            // emit the message with only a type, so essential the body is
+                            // null (in some clients) or undefined
+                            this.emit(type);
                         }
+
                     } else {
+
                         // if we didnt have a type then we&#x27;re simply going to log the issue
                         Logger.error(&quot;Could not process incoming data, it doesn&#x27;t appear to have a &#x27;type&#x27;.&quot;);
                     }
@@ -409,22 +396,64 @@ Client.prototype = Object.create(EventEmitter.prototype, {
      */
     __handleSocketClose: {
         value: function(hasError) {
+
             this._previousState = this._state;
             if (hasError) {
-                this._state = Client.STATE_ERROR;
+                this._state = Client.ERROR;
                 this.emit(Client.STATE_CHANGE, this._state, this._previousState);
             } else {
                 Logger.log(&quot;Client disconnected from &quot; + this.address + &quot;.&quot;);
-                this._state = Client.STATE_DISCONNECTED;
+                this._state = Client.DISCONNECTED;
                 this.emit(Client.STATE_CHANGE, this._state, this._previousState);
             }
         }
     }
-
 });
 
-// extend client with constants
-_.extend(Client,Constants);
+/**
+ * State change event fired on a state change of the client.
+ * @property CHANGE_EVENT
+ * @type String
+ * @static
+ * @for Client
+ */
+Client.STATE_CHANGE = &quot;stateChangeEvent&quot;;
+
+/**
+ * The client is connected to the remote socket server.
+ * @property CONNECTED
+ * @type String
+ * @static
+ * @for Client
+ */
+Client.INITIALIZED = &quot;initialized&quot;;
+
+/**
+ * The client is connected to the remote socket server.
+ * @property CONNECTED
+ * @type String
+ * @static
+ * @for Client
+ */
+Client.CONNECTED = &quot;connected&quot;;
+
+/**
+ * The client has diconnected from the remote socket server.
+ * @property DISCONNECTED
+ * @type String
+ * @static
+ * @for Client
+ */
+Client.DISCONNECTED = &quot;disconnected&quot;;
+
+/**
+ * The client has encountered an error connecting to the remote socket server.
+ * @property ERROR
+ * @type String
+ * @static
+ * @for Client
+ */
+Client.ERROR = &quot;error&quot;;
     </pre>
 </div>
 

@@ -2,7 +2,7 @@
     "project": {
         "name": "Monobrow-Node-Client",
         "description": "Monobrow-Node-Client",
-        "version": "0.1.0",
+        "version": "0.8.1",
         "url": "https://github.com/mcgaryes/monobrow"
     },
     "files": {
@@ -12,13 +12,6 @@
             "classes": {
                 "Client": 1
             },
-            "fors": {},
-            "namespaces": {}
-        },
-        "../src/constants.js": {
-            "name": "../src/constants.js",
-            "modules": {},
-            "classes": {},
             "fors": {
                 "Client": 1
             },
@@ -47,7 +40,7 @@
             "plugin_for": [],
             "extension_for": [],
             "file": "../src/client.js",
-            "line": 8,
+            "line": 7,
             "description": "Client for connecting to a Monobrow server.",
             "is_constructor": 1
         },
@@ -70,7 +63,7 @@
     "classitems": [
         {
             "file": "../src/client.js",
-            "line": 29,
+            "line": 27,
             "description": "Public getter for the current state of the client.",
             "itemtype": "property",
             "name": "state",
@@ -79,7 +72,7 @@
         },
         {
             "file": "../src/client.js",
-            "line": 40,
+            "line": 39,
             "description": "Public getter for the previous state of the client.",
             "itemtype": "property",
             "name": "previousState",
@@ -97,16 +90,7 @@
         },
         {
             "file": "../src/client.js",
-            "line": 72,
-            "description": "The total number of siblings a client has. A sibling is considered any\nconnection that sits beside this client on the server (so another connection\nto the same server).",
-            "itemtype": "property",
-            "name": "totalSiblings",
-            "type": "Number",
-            "class": "Client"
-        },
-        {
-            "file": "../src/client.js",
-            "line": 90,
+            "line": 78,
             "description": "Connects the client to the remote socket server.",
             "itemtype": "method",
             "name": "connect",
@@ -114,7 +98,7 @@
         },
         {
             "file": "../src/client.js",
-            "line": 112,
+            "line": 100,
             "description": "Diconnects the client from the remote socket server.",
             "itemtype": "method",
             "name": "disconnect",
@@ -122,7 +106,7 @@
         },
         {
             "file": "../src/client.js",
-            "line": 124,
+            "line": 113,
             "description": "Emits a message to the server the client is connected to.",
             "itemtype": "method",
             "name": "emit",
@@ -142,7 +126,7 @@
         },
         {
             "file": "../src/client.js",
-            "line": 159,
+            "line": 150,
             "description": "Initialization functionality for the client instance. Sets its initial\nstate and creates and adds event listeners to a new socket.",
             "itemtype": "method",
             "name": "__initialize",
@@ -152,7 +136,7 @@
         },
         {
             "file": "../src/client.js",
-            "line": 196,
+            "line": 191,
             "description": "This method is just used for logging purposes. If an error occurs\nthe close method is called immediately after and we'll handle\ntriggering the state change there, not here.",
             "itemtype": "method",
             "name": "__handleSocketError",
@@ -169,7 +153,7 @@
         },
         {
             "file": "../src/client.js",
-            "line": 218,
+            "line": 217,
             "description": "Handler functionality for when the client socket instance connects to the server.",
             "itemtype": "method",
             "name": "__handleSocketConnect",
@@ -196,7 +180,7 @@
         },
         {
             "file": "../src/client.js",
-            "line": 312,
+            "line": 299,
             "description": "Handler functionality for when the socket connection is closed. Fires a\nstate error state change event if the socket was closed due to error. If there\nwas no error then the handler dispatches a disconnected state change event.",
             "itemtype": "method",
             "name": "__handleSocketClose",
@@ -212,88 +196,58 @@
             "class": "Client"
         },
         {
-            "file": "../src/constants.js",
-            "line": 3,
+            "file": "../src/client.js",
+            "line": 323,
             "description": "State change event fired on a state change of the client.",
             "itemtype": "property",
-            "name": "STATE_CHANGE_EVENT",
+            "name": "CHANGE_EVENT",
             "type": "String",
             "static": 1,
             "class": "Client"
         },
         {
-            "file": "../src/constants.js",
-            "line": 12,
-            "description": "The data event is fired when incoming data is recognized. The data\npassed is the raw buffer. Call toString on the data to get the string\nrepresentation of the data.",
-            "itemtype": "property",
-            "name": "DATA_EVENT",
-            "type": "String",
-            "static": 1,
-            "class": "Client"
-        },
-        {
-            "file": "../src/constants.js",
-            "line": 23,
-            "description": "A connection was just ADDED to the same server this client is\nlistening to. This relationship is denoted as a sibling relationship.",
-            "itemtype": "property",
-            "name": "SIBLING_ADDED_EVENT",
-            "type": "String",
-            "static": 1,
-            "class": "Client"
-        },
-        {
-            "file": "../src/constants.js",
-            "line": 33,
-            "description": "A connection was just REMOVED to the same server this client is\nlistening to. This relationship is denoted as a sibling relationship.",
-            "itemtype": "property",
-            "name": "SIBLING_REMOVED_EVENT",
-            "type": "String",
-            "static": 1,
-            "class": "Client"
-        },
-        {
-            "file": "../src/constants.js",
-            "line": 43,
+            "file": "../src/client.js",
+            "line": 332,
             "description": "The client is connected to the remote socket server.",
             "itemtype": "property",
-            "name": "STATE_CONNECTED",
+            "name": "CONNECTED",
             "type": "String",
             "static": 1,
             "class": "Client"
         },
         {
-            "file": "../src/constants.js",
-            "line": 52,
+            "file": "../src/client.js",
+            "line": 341,
             "description": "The client is connected to the remote socket server.",
             "itemtype": "property",
-            "name": "STATE_CONNECTED",
+            "name": "CONNECTED",
             "type": "String",
             "static": 1,
             "class": "Client"
         },
         {
-            "file": "../src/constants.js",
-            "line": 61,
+            "file": "../src/client.js",
+            "line": 350,
             "description": "The client has diconnected from the remote socket server.",
             "itemtype": "property",
-            "name": "STATE_DISCONNECTED",
+            "name": "DISCONNECTED",
             "type": "String",
             "static": 1,
             "class": "Client"
         },
         {
-            "file": "../src/constants.js",
-            "line": 70,
+            "file": "../src/client.js",
+            "line": 359,
             "description": "The client has encountered an error connecting to the remote socket server.",
             "itemtype": "property",
-            "name": "STATE_ERROR",
+            "name": "ERROR",
             "type": "String",
             "static": 1,
             "class": "Client"
         },
         {
             "file": "../src/logger.js",
-            "line": 23,
+            "line": 25,
             "description": "Getter that grabs and formats the current date and creates\na timestamp for use in logging",
             "itemtype": "property",
             "name": "_timestamp",
@@ -304,7 +258,7 @@
         },
         {
             "file": "../src/logger.js",
-            "line": 44,
+            "line": 47,
             "description": "Console log wrapper that also writes to the out file\nif it was specified in the server options",
             "itemtype": "method",
             "name": "log",
@@ -319,7 +273,7 @@
         },
         {
             "file": "../src/logger.js",
-            "line": 60,
+            "line": 61,
             "description": "Console warn wrapper that also writes to the out file\nif it was specified in the server options",
             "itemtype": "method",
             "name": "warn",
@@ -334,7 +288,7 @@
         },
         {
             "file": "../src/logger.js",
-            "line": 76,
+            "line": 75,
             "description": "Console error wrapper that also writes to the error file\nif it was specified in the server options",
             "itemtype": "method",
             "name": "error",

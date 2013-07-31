@@ -19,7 +19,7 @@
             
         </div>
         <div class="yui3-u-1-4 version">
-            <em>API Docs for: 0.1.0</em>
+            <em>API Docs for: 0.8.1</em>
         </div>
     </div>
     <div id="bd" class="yui3-g">
@@ -102,7 +102,9 @@ var fs = require(&#x27;fs&#x27;);
  * @private
  */
 var Logger = function(options) {
+
 	if (Logger.instance) {
+
 		return Logger.sharedInstance;
 	}
 	Logger.sharedInstance = this;
@@ -120,6 +122,7 @@ Object.defineProperties(Logger.prototype, {
 	 */
 	_timestamp: {
 		get: function() {
+
 			var date = new Date();
 			var y = date.getFullYear();
 			var mo = date.getMonth() &gt; 10 ? date.getMonth() + 1 : &quot;0&quot; + (date.getMonth() + 1);
@@ -140,10 +143,8 @@ Object.defineProperties(Logger.prototype, {
 	 */
 	log: {
 		value: function(message) {
+
 			console.log(color(this._timestamp, &quot;green&quot;) + &quot; - &quot; + message);
-			if (this._out) {
-				fs.appendFile(this._out, this._timestamp + &quot; - &quot; + message + &quot;\n&quot;);
-			}
 		}
 	},
 
@@ -156,10 +157,8 @@ Object.defineProperties(Logger.prototype, {
 	 */
 	warn: {
 		value: function(warning) {
+
 			console.log(color(this._timestamp, &quot;green&quot;) + &quot; - &quot; + color(&quot;Warning: &quot;, &quot;yellow+bold&quot;) + color(warning, &quot;yellow&quot;));
-			if (this._out) {
-				fs.appendFile(this._out, &quot;Warning: &quot; + this._timestamp + &quot; - &quot; + warning + &quot;\n&quot;);
-			}
 		}
 	},
 
@@ -172,10 +171,8 @@ Object.defineProperties(Logger.prototype, {
 	 */
 	error: {
 		value: function(error) {
+
 			console.log(color(this._timestamp, &quot;green&quot;) + &quot; - &quot; + color(&quot;Error: &quot;, &quot;red+bold&quot;) + color(error, &quot;red&quot;));
-			if (this._error) {
-				fs.appendFile(this._error, this._timestamp + &quot; - &quot; + error + &quot;\n&quot;);
-			}
 		}
 	}
 });
