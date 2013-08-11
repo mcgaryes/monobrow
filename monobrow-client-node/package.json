@@ -1,6 +1,6 @@
 {
 	"name": "monobrow-client",
-	"version": "0.8.5",
+	"version": "0.8.6",
 	"description": "Node client for the npm package 'monobrow-server'.",
 	"dependencies": {
 		"underscore": "1.x.x"
