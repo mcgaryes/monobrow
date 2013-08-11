@@ -5,8 +5,8 @@ Like the left brow sometimes needs to converse with the right, Monobrow aims to 
 If you're interested their are a number of clients for other languages including:
 
 1. Objective-C
-*. JavaScript (Web)
-*. ActionScript (Flex/Flash)
+* JavaScript (Web)
+* ActionScript (Flex/Flash)
 
 You can see all of these as well as planned future clients at https://github.com/mcgaryes/monobrow.
 
