@@ -42,13 +42,13 @@ Connection.prototype = Object.create(EventEmitter.prototype, {
 	},
 
 	/**
-	 * The remote port associated with the connections socket object
-	 * @property remotePort
+	 * The remote address associated with the connections socket object
+	 * @property remoteAddress
 	 * @type String
 	 */
-	remotePort: {
+	remoteAddress: {
 		get: function() {
-			return this._socket.remotePort;
+			return this._socket.remoteAddress;
 		}
 	},
 

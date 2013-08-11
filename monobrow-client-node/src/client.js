@@ -123,8 +123,6 @@ Client.prototype = Object.create(EventEmitter.prototype, {
     __initialize: {
         value: function() {
 
-            this._state = Client.INITIALIZED;
-
             // create the socket server we'll use to connect to the server with
             this._socket = net.Socket();
 

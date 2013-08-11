@@ -17,16 +17,15 @@ Like the left brow sometimes needs to converse with the right, Monobrow aims to 
 
 ### Client State Events
 
+	...
 	client.on(Client.STATE_CHANGE,function(state,previousState){
-		if(state === "connected") {
+		if(state === Client.CONNECTED) {
 			...
 		}
 	});
 
-1. `initialized` - Initialization complete.
-* `connected` - The client has connected to the client
+1. `connected` - The client has connected to the client
 * `disconnected` - The client has disconnected with or without an error.
-* `error` - There was an error with the client.
 
 ### Messaging
 
@@ -47,6 +46,15 @@ To recieve messages in a client you'll use an `on` message handler, as messages 
 	});
 
 
+### Examples
+
+Examples available at https://github.com/mcgaryes/monobrow/tree/master/examples.
+
 ### Documentation
 
-Full source documentation is available within the `node_modules/monobrow-client/docs` directory.
+Full API documentation is available after a build:
+	
+	[project-directory] $ cd node_modules/monobrow-server/build
+	[build] $ grunt
+	[build] $ cd ../docs
+	[docs] $ open index.html

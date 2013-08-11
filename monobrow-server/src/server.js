@@ -17,6 +17,7 @@ var ConnectionManager = require("./connection-manager");
  * server as well as as an instance of the monobrow connection manager.
  * @class Server
  * @constructor
+ * @param {Object} options Contains `port` (required), `host` (required) and `whitelist` (optional), an array of whitelisted urls.
  */
 var Server = module.exports = function(options) {
 
@@ -30,23 +31,24 @@ var Server = module.exports = function(options) {
 Server.prototype = Object.create(EventEmitter.prototype, {
 
 	// ============================================================
-	// === Public Getters / Setters ===============================
+	// === Public Properties ======================================
 	// ============================================================
 
+	/**
+	 * The total number of connections the server currently has
+	 * @property totalConnections
+	 * @type String
+	 */
 	totalConnections:{
 		get:function(){
 			return this._manager.totalConnections;
 		}
 	},
 
-	// ============================================================
-	// === Private Getters / Setters ==============================
-	// ============================================================
-
 	/**
+	 * The address of the server
 	 * @property address
 	 * @type String
-	 * @private
 	 */
 	address: {
 		get: function() {
@@ -73,13 +75,13 @@ Server.prototype = Object.create(EventEmitter.prototype, {
 				delegate._manager.handleSocketConnection.call(delegate._manager, socket);
 			});
 
-			server.on("error", function(e) {
-				if (e.code === "EADDRINUSE") delegate.emit(Server.ERROR, e);
+			server.on("error", function(err) {
+				delegate.emit(Server.STATE_CHANGE, err, Server.STOPPED);
 			});
 
 			// start listening on port and host
 			server.listen(this.port, this.host, function() {
-				delegate.emit(Server.STATE_CHANGE, Server.RUNNING);
+				delegate.emit(Server.STATE_CHANGE, undefined, Server.RUNNING);
 			});
 
 		}
@@ -110,18 +112,20 @@ Server.prototype = Object.create(EventEmitter.prototype, {
 			var delegate = this;
 
 			// create manager
-			var manager = this._manager = new ConnectionManager();
+			var manager = this._manager = new ConnectionManager(_.pick(options,["whitelist"]));
 
 			// add event listeners that will in turn dispatch events of their own
 			manager.on(ConnectionManager.CONNECTION_MADE, function(connection) {
-				delegate.emit(Server.CLIENT_DID_CONNECT);
+				delegate.emit(Server.CLIENT_DID_CONNECT, connection);
 			});
 
 			manager.on(ConnectionManager.CONNECTION_LOST, function(connection) {
 				delegate.emit(Server.CLIENT_DID_DISCONNECT, connection);
 			});
 
-			delegate.emit(Server.STATE_CHANGE, Server.INITIALIZED);
+			manager.on(ConnectionManager.CONNECTION_REJECTED, function(connectionAddress) {
+				delegate.emit(Server.CLIENT_WAS_REJECTED, connectionAddress);
+			});
 		}
 	}
 });
@@ -131,11 +135,11 @@ Server.prototype = Object.create(EventEmitter.prototype, {
 // ============================================================
 
 /**
- * @property INITIALIZED
+ * @property STATE_CHANGE
  * @for Server
  * @static
  */
-Server.INITIALIZED = "initialized";
+Server.STATE_CHANGE = "stageChange";
 
 /**
  * @property RUNNING
@@ -152,20 +156,6 @@ Server.RUNNING = "running";
 Server.STOPPED = "stopped";
 
 /**
- * @property ERROR
- * @for Server
- * @static
- */
-Server.ERROR = "error";
-
-/**
- * @property STATE_CHANGE
- * @for Server
- * @static
- */
-Server.STATE_CHANGE = "stageChange";
-
-/**
  * @property CLIENT_DID_CONNECT
  * @for Server
  * @static
@@ -178,3 +168,11 @@ Server.CLIENT_DID_CONNECT = "clientDidConnect";
  * @static
  */
 Server.CLIENT_DID_DISCONNECT = "clientDidDisconnect";
+
+/**
+ * @property CLIENT_WAS_REJECTED
+ * @for Server
+ * @static
+ */
+Server.CLIENT_WAS_REJECTED = "clientWasRejected";
+

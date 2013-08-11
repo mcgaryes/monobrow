@@ -48,8 +48,8 @@ ConnectionManager.prototype = Object.create(EventEmitter.prototype, {
 
 			// if we'll allow the socket to connect or not
 			if (!this.__isConnectionAllowed(socket)) {
-				socket.error();
-				var address = socket.remoteAddress + ":" + socket.remotePort;
+				this.emit(ConnectionManager.CONNECTION_REJECTED, socket.remoteAddress);
+				socket.destroy();
 				return;
 			}
 
@@ -112,13 +112,21 @@ ConnectionManager.prototype = Object.create(EventEmitter.prototype, {
 	 * or not. This is based on whitelisted domains and IP
 	 * addresses in the server config.
 	 * @method __isConnectionAllowed
-	 * @param {Connection} connection
+	 * @param {Net.Socket} socket
 	 * @return Boolean Whether the connection is allowed or not
 	 * @private
 	 */
 	__isConnectionAllowed: {
-		value: function(connection) {
-			return true;
+		value: function(socket) {
+			var allowed = false;
+			if(this.options.whitelist && this.options.whitelist.length > 0) {
+				_.each(this.options.whitelist,function(remote){
+					if(socket.remoteAddress === remote) allowed = true;
+				});
+			} else {
+				allowed = true;
+			}
+			return allowed;
 		}
 	},
 
@@ -140,6 +148,7 @@ ConnectionManager.prototype = Object.create(EventEmitter.prototype, {
 	 * @method __removeConnection
 	 * @param {Connection} connection
 	 * @private
+	 * @TODO Need to emit the event before I actually remove the connection
 	 */
 	__removeConnection: {
 		value: function(connection) {
@@ -164,11 +173,18 @@ ConnectionManager.prototype = Object.create(EventEmitter.prototype, {
  * @for ConnectionManager
  * @static
  */
-ConnectionManager.CONNECTION_MADE = "connectionMadeEvent";
+ConnectionManager.CONNECTION_MADE = "connectionMade";
 
 /**
  * @property CONNECTION_LOST
  * @for ConnectionManager
  * @static
  */
-ConnectionManager.CONNECTION_LOST = "connectionLostEvent";
+ConnectionManager.CONNECTION_LOST = "connectionLost";
+
+/**
+ * @property CONNECTION_REJECTED
+ * @for ConnectionManager
+ * @static
+ */
+ConnectionManager.CONNECTION_REJECTED = "connectionRejected";
