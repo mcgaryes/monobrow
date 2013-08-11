@@ -26,5 +26,5 @@ To get started with the server and clients check out the their respective README
 
 ### Roadmap
 
-* Plans to build out clients for ObjectiveC++ and Processing.
+* Plans to build out clients for Processing.
 * Examples illustrating simple and complex implementations.
