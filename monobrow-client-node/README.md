@@ -2,6 +2,14 @@
 
 Like the left brow sometimes needs to converse with the right, Monobrow aims to serve the same purpose for different technologies. It provides a simple, abstracted, messaging protocol that makes it easy to message from one language/platform to another.
 
+If you're interested their are a number of clients for other languages including:
+
+1. Objective-C
+*. JavaScript (Web)
+*. ActionScript (Flex/Flash)
+
+You can see all of these as well as planned future clients at https://github.com/mcgaryes/monobrow.
+
 ### Installation
 
 	[project-directory] $ npm install monobrow-client --save
