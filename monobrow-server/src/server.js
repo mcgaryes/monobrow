@@ -6,8 +6,6 @@ var _ = require("underscore");
 var EventEmitter = require("events").EventEmitter;
 var net = require('net');
 var Util = require("util");
-
-var Logger = require("./logger");
 var ConnectionManager = require("./connection-manager");
 
 // ============================================================
@@ -32,15 +30,25 @@ var Server = module.exports = function(options) {
 Server.prototype = Object.create(EventEmitter.prototype, {
 
 	// ============================================================
+	// === Public Getters / Setters ===============================
+	// ============================================================
+
+	totalConnections:{
+		get:function(){
+			return this._manager.totalConnections;
+		}
+	},
+
+	// ============================================================
 	// === Private Getters / Setters ==============================
 	// ============================================================
 
 	/**
-	 * @property _address
+	 * @property address
 	 * @type String
 	 * @private
 	 */
-	_address: {
+	address: {
 		get: function() {
 			return this._server.address().address + ":" + this._server.address().port;
 		}
@@ -66,18 +74,23 @@ Server.prototype = Object.create(EventEmitter.prototype, {
 			});
 
 			server.on("error", function(e) {
-				if (e.code === "EADDRINUSE") {
-					Logger.error("The port and host are already in use.");
-				}
+				if (e.code === "EADDRINUSE") delegate.emit(Server.ERROR, e);
 			});
 
 			// start listening on port and host
 			server.listen(this.port, this.host, function() {
-				Logger.log("Monobrow server is running on " + delegate._address + ".");
 				delegate.emit(Server.STATE_CHANGE, Server.RUNNING);
 			});
 
 		}
+	},
+
+	/**
+	 * Starts the TCP server on the specified port and host
+	 * @method stop
+	 */
+	stop:function(){
+		throw "'stop' method is not implemented yet.";
 	},
 
 	// ============================================================
@@ -137,6 +150,13 @@ Server.RUNNING = "running";
  * @static
  */
 Server.STOPPED = "stopped";
+
+/**
+ * @property ERROR
+ * @for Server
+ * @static
+ */
+Server.ERROR = "error";
 
 /**
  * @property STATE_CHANGE

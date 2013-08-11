@@ -4,8 +4,6 @@
 
 var _ = require("underscore");
 var EventEmitter = require("events").EventEmitter;
-
-var Logger = require("./logger");
 var Connection = require("./connection");
 
 // ============================================================
@@ -27,6 +25,16 @@ var ConnectionManager = module.exports = function(options) {
 ConnectionManager.prototype = Object.create(EventEmitter.prototype, {
 
 	// ============================================================
+	// === Public Getters / Setters ===============================
+	// ============================================================
+
+	totalConnections: {
+		get: function() {
+			return this._connections.length;
+		}
+	},
+
+	// ============================================================
 	// === Public Methods =========================================
 	// ============================================================
 
@@ -42,7 +50,6 @@ ConnectionManager.prototype = Object.create(EventEmitter.prototype, {
 			if (!this.__isConnectionAllowed(socket)) {
 				socket.error();
 				var address = socket.remoteAddress + ":" + socket.remotePort;
-				Logger.error("Monobrow refused connection from " + address);
 				return;
 			}
 
@@ -63,7 +70,6 @@ ConnectionManager.prototype = Object.create(EventEmitter.prototype, {
 
 			// connection error
 			connection.on(Connection.EVENT_ERROR, function($e) {
-				Logger.error($e.toString() + " Removing connection...");
 				delegate.__removeConnection(connection);
 			});
 
@@ -124,9 +130,7 @@ ConnectionManager.prototype = Object.create(EventEmitter.prototype, {
 	 */
 	__addConnection: {
 		value: function(connection) {
-
 			this._connections.push(connection);
-			Logger.log("Connection '" + connection.cid + "' added. " + this._connections.length + " total connection(s).");
 			this.emit(ConnectionManager.CONNECTION_MADE, connection);
 		}
 	},
@@ -139,15 +143,14 @@ ConnectionManager.prototype = Object.create(EventEmitter.prototype, {
 	 */
 	__removeConnection: {
 		value: function(connection) {
-
+			var connectionToRemove;
 			this._connections = _.filter(this._connections, function(c, index) {
-				if (c.remotePort === connection.remotePort) {
-
-					Logger.log("Connection '" + c.cid + "' with type '" + c.type + "' was removed. " + (this._connections.length - 1) + " total connection(s) remaining.");
-					this.emit(ConnectionManager.CONNECTION_LOST, connection);
-				}
+				if (c.remotePort === connection.remotePort) connectionToRemove = connection;
 				return c.remotePort !== connection.remotePort;
 			}, this);
+			if (!_.isUndefined(connectionToRemove)) {
+				this.emit(ConnectionManager.CONNECTION_LOST, connection);
+			}
 		}
 	}
 });
@@ -161,11 +164,11 @@ ConnectionManager.prototype = Object.create(EventEmitter.prototype, {
  * @for ConnectionManager
  * @static
  */
-ConnectionManager.EVENT_CONNECTION_MADE = "connectionMadeEvent";
+ConnectionManager.CONNECTION_MADE = "connectionMadeEvent";
 
 /**
  * @property CONNECTION_LOST
  * @for ConnectionManager
  * @static
  */
-ConnectionManager.EVENT_CONNECTION_LOST = "connectionLostEvent";
+ConnectionManager.CONNECTION_LOST = "connectionLostEvent";

@@ -1,7 +1,6 @@
 var _ = require("underscore");
 var EventEmitter = require("events").EventEmitter;
 var net = require('net');
-var Logger = require("./logger");
 var Util = require("util");
 
 /**
@@ -31,7 +30,6 @@ Client.prototype = Object.create(EventEmitter.prototype, {
      */
     state: {
         get: function() {
-
             return this._state;
         }
     },
@@ -43,7 +41,6 @@ Client.prototype = Object.create(EventEmitter.prototype, {
      */
     previousState: {
         get: function() {
-
             return this._previousState;
         }
     },
@@ -55,19 +52,7 @@ Client.prototype = Object.create(EventEmitter.prototype, {
      */
     address: {
         get: function() {
-
-            var host = this.host;
-            if (_.isUndefined(host)) {
-
-                host = "localhost";
-            }
-
-            if (_.isUndefined(this.port)) {
-
-                return host;
-            }
-
-            return host + ":" + this.port;
+            return this.host + ":" + this.port;
         }
     },
 
@@ -82,17 +67,11 @@ Client.prototype = Object.create(EventEmitter.prototype, {
     connect: {
         value: function() {
             if (this._state !== Client.CONNECTED) {
-
                 if (_.isUndefined(this.port) && _.isUndefined(this.host)) {
-
-                    Logger.error("Client must specify at least a port");
+                    throw "You must pass a host and a port";
                 } else {
-
                     this._socket.connect(this.port, this.host);
                 }
-            } else {
-
-                Logger.warn("Client is already connected to the server.");
             }
         }
     },
@@ -104,8 +83,8 @@ Client.prototype = Object.create(EventEmitter.prototype, {
     disconnect: {
         value: function() {
             if (this._state === Client.CONNECTED) {
-
-                throw "Disconnect not yet implemented.";
+                this.__handleSocketClose();
+                this._socket.unref();
             }
         }
     },
@@ -119,26 +98,14 @@ Client.prototype = Object.create(EventEmitter.prototype, {
     sendMessage: {
         value: function(type, data) {
             if (this._state === Client.CONNECTED) {
-
                 if (!_.isUndefined(type)) {
-
                     if (_.isString(type)) {
-
                         this._socket.write(JSON.stringify({
                             type: type,
                             data: data
                         }));
-                    } else {
-
-                        Logger.warn("Message not sent. Type must be a string.");
                     }
-                } else {
-
-                    Logger.warn("Message not sent. You must specify at least a type.");
                 }
-            } else {
-
-                Logger.warn("Message not sent. Client must be connected to emit a message.");
             }
         }
     },
@@ -166,51 +133,21 @@ Client.prototype = Object.create(EventEmitter.prototype, {
 
             // add listeners for the socket instance
             this._socket.on("error", function(e) {
-
-                delegate.__handleSocketError(e);
+                delegate.__handleSocketClose(e);
             });
 
             this._socket.on("connect", function() {
-
                 delegate.__handleSocketConnect();
             });
 
             this._socket.on("data", function(data) {
-
                 delegate.__handleSocketData(data);
             });
 
             this._socket.on("close", function(hasError) {
-
-                delegate.__handleSocketClose(hasError);
+                if (!hasError) delegate.__handleSocketClose();
             });
 
-        }
-    },
-
-    /**
-     * This method is just used for logging purposes. If an error occurs
-     * the close method is called immediately after and we'll handle
-     * triggering the state change there, not here.
-     * @method __handleSocketError
-     * @param {Object} e Socket error object
-     * @private
-     */
-    __handleSocketError: {
-        value: function(e) {
-            if (e.code === "EADDRNOTAVAIL") {
-
-                Logger.error("Server not available at " + this.address + ".");
-            } else if (e.code === "ECONNREFUSED") {
-
-                Logger.error("The connection to " + this.address + " was refused.");
-            } else if (e.code === "ENOENT") {
-
-                Logger.error("Domain does not exist or lookup failure.");
-            } else {
-
-                Logger.error(e.code);
-            }
         }
     },
 
@@ -221,11 +158,9 @@ Client.prototype = Object.create(EventEmitter.prototype, {
      */
     __handleSocketConnect: {
         value: function() {
-
-            Logger.log("Client connected to " + this.address + ".");
             this._previousState = this._state;
             this._state = Client.CONNECTED;
-            this.emit(Client.STATE_CHANGE, this._state, this._previousState);
+            this.emit(Client.STATE_CHANGE, undefined, this._state);
         }
     },
 
@@ -241,57 +176,16 @@ Client.prototype = Object.create(EventEmitter.prototype, {
     __handleSocketData: {
         value: function($data) {
 
-            try {
+            // need to handle multiple messages that may be attached to the same write
+            var messages = String($data).split("~~~");
 
-                // need to handle multiple messages that may be attached to the same write
-                var messages = String($data).split("~~~");
-
-                // itterate through all of the messages and emit the appropriate event
-                for (var i = 0; i < messages.length; i++) {
-
-                    if (messages[i] === "") {
-                        // this is an empty message that we will not use
-                        return;
-                    }
-
-                    var message = JSON.parse(messages[i]);
-                    var type;
-                    var body;
-
-                    if (message.hasOwnProperty("type")) {
-
-                        // assign the data type to the event
-                        type = message.type;
-                    }
-
-                    if (message.hasOwnProperty("data")) {
-
-                        // if the incoming data has a data attribute assign it to our body property
-                        body = message.data;
-                    }
-
-                    if (type) {
-
-                        if (body) {
-
-                            // emit the message with both a type and body
-                            this.emit(type, body);
-                        } else {
-
-                            // emit the message with only a type, so essential the body is
-                            // null (in some clients) or undefined
-                            this.emit(type);
-                        }
-
-                    } else {
-
-                        // if we didnt have a type then we're simply going to log the issue
-                        Logger.error("Could not process incoming data, it doesn't appear to have a 'type'.");
-                    }
-                }
-            } catch (e) {
-                // if we couldnt perform any of the above functionality the report the error incurred
-                Logger.error(e.message);
+            // itterate through all of the messages and emit the appropriate event
+            for (var i = 0; i < messages.length; i++) {
+                if (messages[i] === "") return;
+                var message = JSON.parse(messages[i]);
+                var type = message.type;
+                var body = message.data;
+                if (type) this.emit(type, body);
             }
         }
     },
@@ -305,16 +199,25 @@ Client.prototype = Object.create(EventEmitter.prototype, {
      * @private
      */
     __handleSocketClose: {
-        value: function(hasError) {
-
+        value: function(err) {
             this._previousState = this._state;
-            if (hasError) {
-                this._state = Client.ERROR;
-                this.emit(Client.STATE_CHANGE, this._state, this._previousState);
+            this._state = Client.DISCONNECTED;
+            if (!err) {
+                this.emit(Client.STATE_CHANGE, undefined, this._state);
             } else {
-                Logger.log("Client disconnected from " + this.address + ".");
-                this._state = Client.DISCONNECTED;
-                this.emit(Client.STATE_CHANGE, this._state, this._previousState);
+                var error = {
+                    code: err.code
+                };
+                if (err.code === "EADDRNOTAVAIL") {
+                    error.message = "Server not available at " + this.address + ".";
+                } else if (err.code === "ECONNREFUSED") {
+                    error.message = "The connection to " + this.address + " was refused.";
+                } else if (err.code === "ENOENT") {
+                    error.message = "Domain does not exist or lookup failure.";
+                } else {
+                    error.message = err.code;
+                }
+                this.emit(Client.STATE_CHANGE, error, this._state);
             }
         }
     }
@@ -327,16 +230,8 @@ Client.prototype = Object.create(EventEmitter.prototype, {
  * @static
  * @for Client
  */
-Client.STATE_CHANGE = "stateChangeEvent";
+Client.STATE_CHANGE = "stateChange";
 
-/**
- * The client is connected to the remote socket server.
- * @property CONNECTED
- * @type String
- * @static
- * @for Client
- */
-Client.INITIALIZED = "initialized";
 
 /**
  * The client is connected to the remote socket server.
@@ -355,12 +250,3 @@ Client.CONNECTED = "connected";
  * @for Client
  */
 Client.DISCONNECTED = "disconnected";
-
-/**
- * The client has encountered an error connecting to the remote socket server.
- * @property ERROR
- * @type String
- * @static
- * @for Client
- */
-Client.ERROR = "error";

@@ -1,10 +1,9 @@
 {
 	"name": "monobrow-client",
-	"version": "0.8.1",
-	"description": "monobrow-server client",
+	"version": "0.8.3",
+	"description": "Node client for the npm package 'monobrow-server'.",
 	"dependencies": {
-		"underscore": "1.x.x",
-		"ansi-color": "0.2.1"
+		"underscore": "1.x.x"
 	},
 	"homepage": "https://github.com/mcgaryes/monobrow/",
 	"bugs": {
@@ -19,5 +18,5 @@
 		"type": "MIT",
 		"url": "https://github.com/mcgaryes/monobrow/master/LICENSE"
 	}],
-	"keywords": ["tcp", "socket"]
+	"keywords": ["tcp", "socket", "data"]
 }

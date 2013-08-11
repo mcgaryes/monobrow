@@ -6,8 +6,6 @@ var _ = require("underscore");
 var EventEmitter = require("events").EventEmitter;
 var Crypto = require("crypto");
 
-var Logger = require("./logger");
-
 // ============================================================
 // === Connection =============================================
 // ============================================================
@@ -20,7 +18,6 @@ var Logger = require("./logger");
  * @constructor
  */
 var Connection = module.exports = function($options) {
-
 	this._cid = "cid" + Connection._cidCounter++;
 	this._socket = $options.socket;
 	_.extend(this, _.omit($options, ["socket"]));
@@ -104,7 +101,11 @@ Connection.prototype = Object.create(EventEmitter.prototype, {
 	sendMessage: {
 		value: function($msg) {
 			if (this.type !== Connection.TYPE_WEB_SOCKET) {
-				this._socket.write($msg + "~~~");
+				try {
+					this._socket.write($msg + "~~~");
+				} catch(e) {
+					console.log(e);
+				}
 			} else {
 				var payload = new Buffer($msg + "~~~", "utf8");
 				this._socket.write(this.__encodeMessage(payload));
@@ -135,10 +136,7 @@ Connection.prototype = Object.create(EventEmitter.prototype, {
 	__initialize: {
 		value: function() {
 
-			if (_.isUndefined(this._socket)) {
-				Logger.error("No socket found. Could not initialize the connection object.");
-				return;
-			}
+			if (_.isUndefined(this._socket)) return;
 
 			var delegate = this;
 
@@ -257,7 +255,6 @@ Connection.prototype = Object.create(EventEmitter.prototype, {
 
 			if (buf.length < 2) {
 				// insufficient data read
-				Logger.warn("Could not process web socket buffer, insufficient data read.");
 				return null;
 			}
 
@@ -273,7 +270,6 @@ Connection.prototype = Object.create(EventEmitter.prototype, {
 			if (length > 125) {
 				if (buf.length < 8) {
 					// insufficient data read
-					Logger.warn("Could not process web socket buffer, insufficient data read.");
 					return null;
 				}
 
@@ -283,20 +279,13 @@ Connection.prototype = Object.create(EventEmitter.prototype, {
 				} else if (length === 127) {
 					// discard high 4 bits because this server cannot handle huge lengths
 					var highBits = buf.readUInt32BE(2);
-					if (highBits !== 0) {
-						console.log("close the server?");
-						// this.close(1009, "");
-					}
+					if (highBits !== 0) console.log("close the server?");
 					length = buf.readUInt32BE(6);
 					idx += 8;
 				}
 			}
 
-			if (buf.length < idx + 4 + length) {
-				// insufficient data read
-				Logger.warn("Could not process web socket buffer, insufficient data read.");
-				return null;
-			}
+			if (buf.length < idx + 4 + length) return null;
 
 			var maskBytes = buf.slice(idx, idx + 4);
 			idx += 4;
